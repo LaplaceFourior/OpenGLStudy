@@ -102,23 +102,34 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    //we want to draw a triangle on the screen, so we first need to indicate the vertex of a triangle
+    // now we want to draw a quadrangle, we need four vertices and an index
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+        0.0f, 0.5f, 0.0f,
+        -0.5f, 0.0f, 0.0f
     };
-
+    unsigned int indices[] = {
+        0, 1, 2,
+        0, 2, 3
+    };
     // we need to allocate some sapce for storing the triangle data
-    unsigned int VBO, VAO;
+    unsigned int VBO, VAO, EBO;
     // allocate the space
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &EBO);
+
     glBindVertexArray(VAO);
+
+
     // indicate the type of the data we're going to store
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // indicate how we store the data
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // indicate how we explain each data
     // the first parameter is 0 which means that the data we store here is for the parameter in vertex shader which 
@@ -134,6 +145,7 @@ int main()
     // to draw different things, so we unbind them first and decide which set of VAO and VBO we use in each draw loop
     // `unbind` is so called, to realize it, we just need to bind it to a None VAO and VBO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     while (!glfwWindowShouldClose(window)) {
@@ -148,9 +160,12 @@ int main()
         // indirectly binds the VBO already ? ? ?, maybe I will never know the internal things 
         // glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBindVertexArray(VAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         // the second parameter indicates the start index of the vertex array
         // the last parameter indicates how many vertices we are going to draw
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // if we do not use triangle, we use glDrawElements
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // what is swap buffer ?
         glfwSwapBuffers(window);
@@ -162,6 +177,7 @@ int main()
     // de-allocate all resources once thy've outlived their purpose
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glDeleteProgram(shaderProgram);
 
     glfwTerminate();
