@@ -36,11 +36,22 @@ int main()
 
     //create the window
     GLFWwindow* window = glfwCreateWindow(800, 600, "finish a scene by myself", NULL, NULL);
-    // maybe if we just want to render a static scene, we do not need to set the context 
+    //error check
+    if (window == NULL) {
+        // log error message
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    } 
     glfwMakeContextCurrent(window);
     
+    //error check
     // glad: load all opengl functions' pointer
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        // log error message
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
     // about the opengl things
 
     // create the shader
@@ -49,20 +60,43 @@ int main()
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     // compile the shader
     glCompileShader(vertexShader);
+    // error check
+    int success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        // get error message
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        // log error message
+        std::cout<< "ERROR::SHADER::VERTEX::COMPILATION_FAILED: " << infoLog << std::endl;
+    }
+
 
     // fragment shader
     unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     // compile the shader
     glCompileShader(fragmentShader);
-
+    // error check
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        // get error message
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        // log error message
+        std::cout<< "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED: " << infoLog << std::endl;
+    }
     // for a normal c source file to executable program, we need compile and link, 
     // the same for shader program, after we compile them, we need to link them
     unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-
+    // error check
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if ( !success ) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout<< "ERROR::SHADER::PROGRAM::LINKING_FAILED: " << infoLog << std::endl;
+    }
     // the vertexShader and the fragmentShader are like source files, after we get the executable program, we do not need
     // the source files anymore
     glDeleteShader(vertexShader);
@@ -134,3 +168,10 @@ int main()
     return 0;
     
 }
+
+/**
+ * data         author          description
+ * 20240311     LaplaceFourior  add error check
+ * 
+ * 
+*/
