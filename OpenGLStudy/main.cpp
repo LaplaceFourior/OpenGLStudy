@@ -107,7 +107,9 @@ int main()
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
         0.0f, 0.5f, 0.0f,
-        -0.5f, 0.0f, 0.0f
+        0.5f, -0.5f, 0.0f,
+        0.6f, -0.5f, 0.0f,
+        0.55f, 0.0f, 0.0f
     };
     unsigned int indices[] = {
         0, 1, 2,
@@ -164,8 +166,8 @@ int main()
         // the second parameter indicates the start index of the vertex array
         // the last parameter indicates how many vertices we are going to draw
         // if we do not use triangle, we use glDrawElements
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // what is swap buffer ?
         glfwSwapBuffers(window);
