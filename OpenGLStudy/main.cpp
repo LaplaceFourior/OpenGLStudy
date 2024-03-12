@@ -8,10 +8,14 @@
 const char* vertexShaderSource = R"(
     # version 330 core
     layout (location = 0) in vec3 aPos;
+    layout (location = 10) in vec3 aColor;
+
+    out vec3 ourColor;
 
     void main()
     {
         gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        ourColor = aColor;
     }
 )";
 
@@ -19,12 +23,12 @@ const char* fragmentShaderSource = R"(
     # version 330 core
 
     out vec4 FragColor;
-    
-    uniform vec4 ourColor;
+
+    in vec3 ourColor;
 
     void main()
     {
-        FragColor = ourColor;
+        FragColor = vec4(ourColor, 1.0);
     }
 )";
 
@@ -106,12 +110,11 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // now we want to draw a quadrangle, we need four vertices and an index
-    // first triangle
+    // vertex data with vertex color
     float firstTrianglevertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
     };
     unsigned int VBO1, VAO1;
     glGenBuffers(1, &VBO1);
@@ -121,25 +124,10 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO1);
     glBufferData(GL_ARRAY_BUFFER, sizeof(firstTrianglevertices), firstTrianglevertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    // second triangle
-    float secondTriangleVertices[] = {
-        0.5f, -0.5f, 0.0f,
-        0.6f, -0.5f, 0.0f,
-        0.55f, 0.0f, 0.0f
-    };
-    unsigned int VBO2, VAO2;
-    glGenBuffers(1, &VBO2);
-    glGenVertexArrays(1, &VAO2);
-
-    glBindVertexArray(VAO2);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangleVertices), secondTriangleVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(10, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(10);
 
     // unbind VAO and VBO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -153,17 +141,10 @@ int main()
 
         // activate the shader program
         glUseProgram(shaderProgram);
-        // set the fragment shader uniform variable ourColor
-        float timeValue = glfwGetTime();
-        float greenValue = sin(timeValue) / 2.0f + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
         glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glBindVertexArray(VAO2);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // what is swap buffer ?
@@ -176,8 +157,6 @@ int main()
     // de-allocate all resources once thy've outlived their purpose
     glDeleteVertexArrays(1, &VAO1);
     glDeleteBuffers(1, &VBO1);
-    glDeleteVertexArrays(1, &VAO2);
-    glDeleteBuffers(1, &VBO2);
     
     glDeleteProgram(shaderProgram);
 
