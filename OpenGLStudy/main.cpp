@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <math.h>
+
 const char* vertexShaderSource = R"(
     # version 330 core
     layout (location = 0) in vec3 aPos;
@@ -17,10 +19,12 @@ const char* fragmentShaderSource = R"(
     # version 330 core
 
     out vec4 FragColor;
+    
+    uniform vec4 ourColor;
 
     void main()
     {
-        FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+        FragColor = ourColor;
     }
 )";
 
@@ -147,8 +151,14 @@ int main()
         glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // activate the shader program
         glUseProgram(shaderProgram);
-        
+        // set the fragment shader uniform variable ourColor
+        float timeValue = glfwGetTime();
+        float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
         glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
