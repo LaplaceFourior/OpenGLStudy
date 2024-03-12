@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(engine)
 
-set(PROJECT_PATH "${CMAKE_SOURCE_DIR}/OpenGLStudy/")
-add_definitions(-DPROJECT_PATH="${PROJECT_PATH}")
+add_definitions(-DPROJECT_PATH="${CMAKE_SOURCE_DIR}")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,6 +14,7 @@ set(GLAD_SOURCES 3rdparty/glad/src/glad.c)
 include_directories(
     3rdparty/glad/include
     3rdparty/glfw/include
+    3rdparty/
 )
 
 set(SOURCES

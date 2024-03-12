@@ -5,17 +5,24 @@
 
 #include <math.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include <string.h>
+
 const char* vertexShaderSource = R"(
     # version 330 core
     layout (location = 0) in vec3 aPos;
-    layout (location = 10) in vec3 aColor;
+    layout (location = 1) in vec3 aColor;
+    layout (location = 2) in vec2 aTexCoord;
 
     out vec3 ourColor;
+    out vec2 TexCoord;
 
     void main()
     {
         gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
         ourColor = aColor;
+        TexCoord = aTexCoord;
     }
 )";
 
@@ -25,10 +32,16 @@ const char* fragmentShaderSource = R"(
     out vec4 FragColor;
 
     in vec3 ourColor;
+    in vec2 TexCoord;
+
+    uniform sampler2D texture1;
+    uniform sampler2D texture2;
 
     void main()
     {
-        FragColor = vec4(ourColor, 1.0);
+        FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);
+        // FragColor = texture(ourTexture, TexCoord);
+        // FragColor = vec4(ourColor, 1.0f);
     }
 )";
 
@@ -112,26 +125,94 @@ int main()
 
     // vertex data with vertex color
     float firstTrianglevertices[] = {
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+        // position         // color        // texture coordinate
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
     };
-    unsigned int VBO1, VAO1;
+    unsigned int indices[] = {
+        0, 1, 2,
+        0, 2, 3
+    };
+
+
+    unsigned int VBO1, VAO1, EBO1;
     glGenBuffers(1, &VBO1);
+    glGenBuffers(1, &EBO1);
     glGenVertexArrays(1, &VAO1);
 
     glBindVertexArray(VAO1);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO1);
     glBufferData(GL_ARRAY_BUFFER, sizeof(firstTrianglevertices), firstTrianglevertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(10, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(10);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+
+    unsigned int texture1;
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);// x
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);// y
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    // flip the image
+    stbi_set_flip_vertically_on_load(true);
+    std::string textureLoaction = PROJECT_PATH + std::string( "/Assert/MisterWhite.png");
+    unsigned char* data = stbi_load(textureLoaction.c_str(), &width, &height, &nrChannels, 0);
+    if( data ) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
+    unsigned int texture2;
+    glGenTextures(1, &texture2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);// x
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);// y
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    textureLoaction = PROJECT_PATH + std::string( "/Assert/godot3D.png");
+    data = stbi_load(textureLoaction.c_str(), &width, &height, &nrChannels, 0);
+    if( data ) {
+        // attention! some picture has no A only RGB but not RGBA, glTexImage2D with GL_RGB or GL_RGBA may cause error
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
+    // set the texture
+    glUseProgram(shaderProgram);
+    int textureLocation = glGetUniformLocation(shaderProgram, "texture1"); 
+    glUniform1i(textureLocation, 0);
+    textureLocation = glGetUniformLocation(shaderProgram, "texture2"); 
+    glUniform1i(textureLocation, 1);
 
     // unbind VAO and VBO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -139,11 +220,17 @@ int main()
         glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
         // activate the shader program
         glUseProgram(shaderProgram);
 
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
         glBindVertexArray(VAO1);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
