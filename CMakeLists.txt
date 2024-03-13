@@ -12,19 +12,26 @@ add_subdirectory(3rdparty/glm)
 
 set(GLAD_SOURCES 3rdparty/glad/src/glad.c)
 
+set(HEADERS
+    OpenGLStudy/Camera.h
+    OpenGLStudy/Input.h
+)
+set(SOURCES
+    OpenGLStudy/main.cpp
+    OpenGLStudy/Camera.cpp
+    OpenGLStudy/Input.cpp
+)
 include_directories(
     3rdparty/glad/include
     3rdparty/glfw/include
     3rdparty/
-)
-
-set(SOURCES
-    OpenGLStudy/main.cpp
+    ${HEADERS}
 )
 
 add_executable(studyopengl
     ${GLAD_SOURCES}
     ${SOURCES}
+    ${HEADERS}
 )
 
 target_link_libraries(studyopengl PRIVATE glfw)

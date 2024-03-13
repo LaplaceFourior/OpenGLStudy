@@ -13,6 +13,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Camera.h"
+
+#include "Input.h"
+
 const char* vertexShaderSource = R"(
     # version 330 core
     layout (location = 0) in vec3 aPos;
@@ -53,6 +57,8 @@ const char* fragmentShaderSource = R"(
     }
 )";
 
+void ProcessInput(GLFWwindow* window, Camera* camera, float deltaTime);
+
 int main() 
 {
     // no error check, just realize it!
@@ -74,6 +80,9 @@ int main()
     } 
     glfwMakeContextCurrent(window);
     
+    // capture mouse input
+    // why process mouse here? out the loop ? how to combine mouse process and keyboard process ?
+    Input::Init(window);
     //error check
     // glad: load all opengl functions' pointer
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -81,8 +90,12 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    // about the opengl things
+    // camera settings
+    Camera camera;
+    camera.setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+    camera.setLookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
+    // about the opengl
     // enable depth test to create 3D graph
     glEnable(GL_DEPTH_TEST);
     // create the shader
@@ -255,8 +268,21 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
+
+    // the loop !
+    float deltaTime = 0.0f;
+    float lastTime = 0.0f;
+    bool firstUpdate = true;
     while (!glfwWindowShouldClose(window)) {
 
+        if( firstUpdate ) {
+            lastTime = glfwGetTime();
+            firstUpdate = false;
+        } else {
+            deltaTime = glfwGetTime() - lastTime;
+            lastTime = glfwGetTime();
+        }
+        ProcessInput(window, &camera, deltaTime);
         // set the background color
         glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -274,7 +300,8 @@ int main()
         glm::mat4 projection = glm::mat4(1.0f);
 
         model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.2f, 0.5, 0.8f));// rotate the model by time
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));// set the view position
+        view = camera.getViewMatrix();
+        // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));// set the view position
         projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
         unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
@@ -310,9 +337,36 @@ int main()
     
 }
 
-/**
- * data         author          description
- * 20240311     LaplaceFourior  add error check
- * 
- * 
-*/
+
+void ProcessInput(GLFWwindow* window, Camera* camera, float deltaTime)
+{
+    if( glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ){
+        // quit
+        glfwSetWindowShouldClose(window, true);
+    }
+
+    if( glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS ) {
+        camera->move(Direction::FORWARD, deltaTime);
+    }
+
+    if( glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS ) {
+        camera->move(Direction::BACKWARD, deltaTime);
+    }
+
+    if( glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS ) {
+        camera->move(Direction::LEFT, deltaTime);
+    }
+
+    if( glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS ) {
+        camera->move(Direction::RIGHT, deltaTime);
+    }
+
+}
+
+
+
+
+
+
+
+
