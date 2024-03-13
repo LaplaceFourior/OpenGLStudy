@@ -9,6 +9,10 @@
 #include "stb_image.h"
 #include <string.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 const char* vertexShaderSource = R"(
     # version 330 core
     layout (location = 0) in vec3 aPos;
@@ -18,9 +22,13 @@ const char* vertexShaderSource = R"(
     out vec3 ourColor;
     out vec2 TexCoord;
 
+    uniform mat4 model;
+    uniform mat4 view;
+    uniform mat4 projection;
+
     void main()
     {
-        gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        gl_Position = projection * view * model * vec4(aPos, 1.0);
         ourColor = aColor;
         TexCoord = aTexCoord;
     }
@@ -75,6 +83,8 @@ int main()
     }
     // about the opengl things
 
+    // enable depth test to create 3D graph
+    glEnable(GL_DEPTH_TEST);
     // create the shader
     // vertex
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -123,17 +133,48 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // vertex data with vertex color
-    float firstTrianglevertices[] = {
+    // a box centered at the origin 
+    float boxVertices[] = {
         // position         // color        // texture coordinate
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
+        0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // front 
+        0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+       -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+       -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+       -0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // back
+       -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f,  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+       -0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // left
+       -0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+       -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+       -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // right
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // up
+        0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+       -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+       -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // down
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+       -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+       -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
     };
+    // every face's index is the same
     unsigned int indices[] = {
-        0, 1, 2,
-        0, 2, 3
+        0 , 1 , 2 ,// front
+        0 , 2 , 3 ,
+        4 , 5 , 6 ,// back
+        4 , 6 , 7 ,
+        8 , 9 , 10,// left
+        8 , 10, 11,
+        12, 13, 14,// right
+        12, 14, 15,
+        16, 17, 18,// up
+        16, 18, 19,
+        20, 21, 22,// down
+        20, 22, 23
     };
 
 
@@ -145,7 +186,7 @@ int main()
     glBindVertexArray(VAO1);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO1);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTrianglevertices), firstTrianglevertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     
@@ -218,7 +259,7 @@ int main()
 
         // set the background color
         glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
@@ -227,10 +268,27 @@ int main()
         // activate the shader program
         glUseProgram(shaderProgram);
 
+        // set the m v p matrix
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
+
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.2f, 0.5, 0.8f));// rotate the model by time
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));// set the view position
+        projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+
+        unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
+        unsigned int viewLocation = glGetUniformLocation(shaderProgram, "view");
+        unsigned int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+
+        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
         glBindVertexArray(VAO1);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
