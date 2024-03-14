@@ -30,9 +30,9 @@ include_directories(
 )
 
 add_executable(studyopengl
+    ${HEADERS}
     ${GLAD_SOURCES}
     ${SOURCES}
-    ${HEADERS}
 )
 
 target_link_libraries(studyopengl PRIVATE glfw)

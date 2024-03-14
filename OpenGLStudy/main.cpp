@@ -57,7 +57,8 @@ const char* fragmentShaderSource = R"(
     }
 )";
 
-void ProcessInput(GLFWwindow* window, Camera* camera, float deltaTime);
+void ProcessInputKey(GLFWwindow* window, Camera* camera, float deltaTime);
+void ProcessInputMouse(GLFWwindow* window, Camera* camera, double& lastX, double& lastY, bool& firstMouse);
 
 int main() 
 {
@@ -98,6 +99,7 @@ int main()
     // about the opengl
     // enable depth test to create 3D graph
     glEnable(GL_DEPTH_TEST);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // create the shader
     // vertex
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -273,6 +275,8 @@ int main()
     float deltaTime = 0.0f;
     float lastTime = 0.0f;
     bool firstUpdate = true;
+    double lastX = 400, lastY = 300;
+    bool firstMouse = true;
     while (!glfwWindowShouldClose(window)) {
 
         if( firstUpdate ) {
@@ -282,7 +286,8 @@ int main()
             deltaTime = glfwGetTime() - lastTime;
             lastTime = glfwGetTime();
         }
-        ProcessInput(window, &camera, deltaTime);
+        ProcessInputKey(window, &camera, deltaTime);
+        ProcessInputMouse(window, &camera, lastX, lastY, firstMouse);
         // set the background color
         glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -338,7 +343,7 @@ int main()
 }
 
 
-void ProcessInput(GLFWwindow* window, Camera* camera, float deltaTime)
+void ProcessInputKey(GLFWwindow* window, Camera* camera, float deltaTime)
 {
     if( glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ){
         // quit
@@ -363,7 +368,26 @@ void ProcessInput(GLFWwindow* window, Camera* camera, float deltaTime)
 
 }
 
+void ProcessInputMouse(GLFWwindow* window, Camera* camera, double& lastX, double& lastY, bool& firstMouse)
+{
+    double xPos, yPos;
+    glfwGetCursorPos(window, &xPos, &yPos);
 
+    if (firstMouse) 
+    {
+        lastX = xPos;
+        lastY = yPos;
+        firstMouse = false;
+    }
+
+    float xOffset = - (float)(xPos - lastX);
+    float yOffset = - (float)(yPos - lastY); 
+
+    lastX = xPos;
+    lastY = yPos;
+
+    camera->turnAround(xOffset, yOffset);
+}
 
 
 
