@@ -9,21 +9,31 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(3rdparty/glfw)
 add_subdirectory(3rdparty/glm)
+add_subdirectory(3rdparty/freetype)
 
 set(GLAD_SOURCES 3rdparty/glad/src/glad.c)
 
 set(HEADERS
     OpenGLStudy/Camera.h
     OpenGLStudy/Input.h
+    OpenGLStudy/FileSystem.h
+    OpenGLStudy/TextRender2D.h
+    OpenGLStudy/Shader.h
+    OpenGLStudy/Mesh.h
 )
 set(SOURCES
     OpenGLStudy/main.cpp
     OpenGLStudy/Camera.cpp
     OpenGLStudy/Input.cpp
+    OpenGLStudy/FileSystem.cpp
+    OpenGLStudy/TextRender2D.cpp
+    OpenGLStudy/Shader.cpp
+    OpenGLStudy/Mesh.cpp
 )
 include_directories(
     3rdparty/glad/include
     3rdparty/glfw/include
+    3rdparty/freetype/include
     3rdparty/glm
     3rdparty/
     ${HEADERS}
@@ -35,5 +45,5 @@ add_executable(studyopengl
     ${SOURCES}
 )
 
-target_link_libraries(studyopengl PRIVATE glfw)
+target_link_libraries(studyopengl PRIVATE glfw freetype)
 

@@ -12,7 +12,6 @@ void Camera::setLookAtTarget(const glm::vec3& lookAtTarget)
     
     pitch = glm::degrees(glm::asin(y));
     yaw = glm::degrees(glm::atan(z, x));
-    std::cout << yaw << std::endl;
 }
 void Camera::setPosition(const glm::vec3& position)
 {
