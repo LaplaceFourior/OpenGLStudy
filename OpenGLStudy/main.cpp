@@ -18,6 +18,8 @@
 #include "TextRender2D.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Panel.h"
+#include <memory>
 
 void ProcessInputKey(GLFWwindow* window, Camera* camera, float deltaTime);
 void ProcessInputMouse(GLFWwindow* window, Camera* camera, double& lastX, double& lastY, bool& firstMouse);
@@ -168,21 +170,22 @@ int main()
     glBindTexture(GL_TEXTURE_2D, 0);
 
     // font init
-    TextRender2D::Init();
+    Shader text2DShader = Shader(FileSystem::RelativePath("Assert/Shaders/text.vs"), 
+                                    FileSystem::RelativePath("Assert/Shaders/text.fs"));
+    TextRender2D::Init(
+        FileSystem::RelativePath("Assert/Shaders/text.vs"), 
+        FileSystem::RelativePath("Assert/Shaders/text.fs"),
+        800,
+        600);
     TextRender2D::LoadFonts(FileSystem::RelativePath("Assert/Fonts/arial.ttf"));   
 
-    unsigned int VAO, VBO; 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-
+    // create 2Dpanel in 3D space !
+    std::shared_ptr<Shader> text2Din3DShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/text2Din3D.vs"), 
+                                                                        FileSystem::RelativePath("Assert/Shaders/text2Din3D.fs"));
+    Panel::Init();
+    Panel::LoadFonts(FileSystem::RelativePath("Assert/Fonts/arial.ttf"));
+    Panel panelOne(text2Din3DShader, "Hello world", glm::vec3(1.0f, 0.0f, 0.0f));
+    
     // the loop !
     float deltaTime = 0.0f;
     float lastTime = 0.0f;
@@ -216,7 +219,7 @@ int main()
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
 
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.2f, 0.5, 0.8f));// rotate the model by time
+        // model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.2f, 0.5, 0.8f));// rotate the model by time
         view = camera.getViewMatrix();
         // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));// set the view position
         projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
@@ -227,8 +230,10 @@ int main()
 
         mesh.draw();
 
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        TextRender2D::RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+        TextRender2D::RenderText("(C) LearnOpenGL.com", 25.0f, 25.0f, 1.0f, glm::vec3(0.3, 0.7f, 0.9f));
 
+        panelOne.draw(model, view, projection);
         // what is swap buffer ?
         glfwSwapBuffers(window);
 

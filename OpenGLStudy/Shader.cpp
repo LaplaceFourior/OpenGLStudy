@@ -8,6 +8,11 @@
 
 Shader::Shader(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
+    load(vertexFilePath, fragmentFilePath);
+}
+
+void Shader::load(const std::string& vertexFilePath, const std::string& fragmentFilePath)
+{
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -103,6 +108,10 @@ void Shader::setFloat(const char* variableName, float value) const
 void Shader::setMat4f(const char* variableName, const glm::mat4& mat4) const
 {
     glUniformMatrix4fv(glGetUniformLocation(mShaderProgramID, variableName), 1, GL_FALSE, glm::value_ptr(mat4));
+}
+void Shader::setVec3f(const char* variableName, const glm::vec3& vec3) const
+{
+    glUniform3f(glGetUniformLocation(mShaderProgramID, variableName), vec3.x, vec3.y, vec3.z);
 }
 
 

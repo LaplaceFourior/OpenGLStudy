@@ -20,6 +20,9 @@ set(HEADERS
     OpenGLStudy/TextRender2D.h
     OpenGLStudy/Shader.h
     OpenGLStudy/Mesh.h
+    OpenGLStudy/Window.h
+    OpenGLStudy/Panel.h
+    OpenGLStudy/Character.h
 )
 set(SOURCES
     OpenGLStudy/main.cpp
@@ -29,6 +32,8 @@ set(SOURCES
     OpenGLStudy/TextRender2D.cpp
     OpenGLStudy/Shader.cpp
     OpenGLStudy/Mesh.cpp
+    OpenGLStudy/Window.cpp
+    OpenGLStudy/Panel.cpp
 )
 include_directories(
     3rdparty/glad/include
