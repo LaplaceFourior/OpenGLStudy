@@ -19,6 +19,7 @@ public:
     glm::mat4 getViewMatrix() const;
     void move(Direction direction, float deltaTime);
     void turnAround(float xOffset, float yOffset);
+    void update(float deltaTime);
 private:
     float cameraSpeed = 2.0f;
     glm::vec3 cameraPosition;

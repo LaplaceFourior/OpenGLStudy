@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include <iostream>
+#include "Input.h"
+
 void Camera::setLookAtTarget(const glm::vec3& lookAtTarget)
 {
     cameraLookAtTarget = lookAtTarget;
@@ -57,4 +59,23 @@ void Camera::turnAround(float xOffset, float yOffset)
     float z = glm::cos(glm::radians(pitch)) * glm::sin(glm::radians(180 - yaw));
     cameraFrontDirection = glm::vec3(x, y, z);
     cameraRightDirection = glm::cross(cameraFrontDirection, cameraUpDirection);
+}
+
+void Camera::update(float deltaTime)
+{
+    if (Input::IsKeyPressed(GLFW_KEY_W)) {
+        move(Direction::FORWARD, deltaTime);
+    }
+    if (Input::IsKeyPressed(GLFW_KEY_S)) {
+        move(Direction::BACKWARD, deltaTime);
+    }
+    if (Input::IsKeyPressed(GLFW_KEY_A)) {
+        move(Direction::LEFT, deltaTime);
+    }
+    if (Input::IsKeyPressed(GLFW_KEY_D)) {
+        move(Direction::RIGHT, deltaTime);
+    }
+
+    glm::vec2 mouseDelta = Input::GetMouseDelta();
+    turnAround(-mouseDelta.x, -mouseDelta.y);
 }

@@ -158,10 +158,12 @@ void Panel::draw(const glm::mat4& model, const glm::mat4& view, const glm::mat4&
     mShader->setMat4f("model", model);
     mShader->setMat4f("view", view);
     mShader->setMat4f("projection", projection);
+    glDisable(GL_DEPTH_TEST);
     for(int i = 0; i < VAOs.size(); i++) {
         glBindVertexArray(VAOs[i]);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, Textures[i]);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
+    glEnable(GL_DEPTH_TEST);
 }

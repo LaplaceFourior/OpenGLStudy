@@ -23,6 +23,8 @@ set(HEADERS
     OpenGLStudy/Window.h
     OpenGLStudy/Panel.h
     OpenGLStudy/Character.h
+    OpenGLStudy/Time.h
+    OpenGLStudy/Texture.h
 )
 set(SOURCES
     OpenGLStudy/main.cpp
@@ -34,6 +36,8 @@ set(SOURCES
     OpenGLStudy/Mesh.cpp
     OpenGLStudy/Window.cpp
     OpenGLStudy/Panel.cpp
+    OpenGLStudy/Time.cpp
+    OpenGLStudy/Texture.cpp
 )
 include_directories(
     3rdparty/glad/include
