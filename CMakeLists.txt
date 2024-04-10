@@ -7,6 +7,9 @@ add_definitions(-DPROJECT_PATH="${CMAKE_SOURCE_DIR}")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(Vulkan REQUIRED)
+include_directories(${Vulkan_INCLUDE_DIRS})
+
 add_subdirectory(3rdparty/glfw)
 add_subdirectory(3rdparty/glm)
 add_subdirectory(3rdparty/freetype)
@@ -54,5 +57,5 @@ add_executable(studyopengl
     ${SOURCES}
 )
 
-target_link_libraries(studyopengl PRIVATE glfw freetype)
+target_link_libraries(studyopengl PRIVATE glfw freetype ${Vulkan_LIBRARIES})
 
