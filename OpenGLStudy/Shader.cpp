@@ -113,10 +113,14 @@ void Shader::setVec3f(const char* variableName, const glm::vec3& vec3) const
 {
     glUniform3f(glGetUniformLocation(mShaderProgramID, variableName), vec3.x, vec3.y, vec3.z);
 }
-void Shader::applyShaderFunc(std::shared_ptr<Camera> camera, std::shared_ptr<Object> object)
+void Shader::setVec4f(const char* variableName, const glm::vec4& vec4) const
+{
+    glUniform4f(glGetUniformLocation(mShaderProgramID, variableName), vec4.x, vec4.y, vec4.z, vec4.w);
+}
+void Shader::applyShaderFunc(std::shared_ptr<Camera> camera, std::shared_ptr<Object> object, std::shared_ptr<RenderEnv> renderEnv)
 {
     if (shaderFunc) {
-        shaderFunc(camera, object);
+        shaderFunc(camera, object, renderEnv);
     }
 }
 

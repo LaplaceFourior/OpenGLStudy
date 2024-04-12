@@ -13,7 +13,7 @@ Window::Window(int width, int heigh, const char* title)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //create the window
-    mWindow = glfwCreateWindow(800, 600, title, NULL, NULL);
+    mWindow = glfwCreateWindow(width, heigh, title, NULL, NULL);
     setActive();
     //error check
     if (mWindow == NULL) {

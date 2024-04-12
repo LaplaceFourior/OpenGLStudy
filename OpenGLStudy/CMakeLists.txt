@@ -19,6 +19,7 @@ set(HEADERS
     Material.h
     Object.h
     MeshFactory.h
+    RenderEnv.h
 )
 set(SOURCES
     main.cpp
@@ -36,6 +37,7 @@ set(SOURCES
     Material.cpp
     Object.cpp
     MeshFactory.cpp
+    RenderEnv.cpp
 )
 include_directories(
     ${HEADERS}

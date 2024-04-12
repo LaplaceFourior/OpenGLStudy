@@ -22,6 +22,7 @@
 #include "Object.h"
 #include "MeshFactory.h"
 #include "Render.h"
+#include "RenderEnv.h"
 
 #define WIDTH 800
 #define HEIGH 600
@@ -49,34 +50,33 @@ int main()
     camera->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     camera->setLookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
+    auto renderEnv = std::make_shared<RenderEnv>();
+    renderEnv->setAmbientStrength(0.1f);
     
     // create the shader
     auto defaultShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/default.vs"), 
                             FileSystem::RelativePath("Assert/Shaders/default.fs"));
     
-    defaultShader->setShaderFunc([shaderPtr = defaultShader->shared_from_this()](std::shared_ptr<Camera> camera, std::shared_ptr<Object> object) {
+    defaultShader->setShaderFunc([shaderPtr = defaultShader->shared_from_this()](std::shared_ptr<Camera> camera, 
+                                                                                std::shared_ptr<Object> object,
+                                                                                std::shared_ptr<RenderEnv> renderEnv) {
         // set the background color
         auto textures = object->getMaterial()->getTextures();
         for (auto& texture : textures) {
             texture->bind();
         }
         shaderPtr->use();
-        // set the m v p matrix
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
 
-        // model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.2f, 0.5, 0.8f));// rotate the model by time
-        view = camera->getViewMatrix();
-        // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));// set the view position
-        projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f);
-        // projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 100.0f);
         shaderPtr->setBool("useTexture", true);
-        shaderPtr->setMat4f("model", model);
-        shaderPtr->setMat4f("view", view);
-        shaderPtr->setMat4f("projection", projection);
+        shaderPtr->setMat4f("model", object->getTransform());
+        shaderPtr->setMat4f("view", camera->getViewMatrix());
+        shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
         shaderPtr->setInt("texture1", textures[0]->getTexturePositionID());
         shaderPtr->setInt("texture2", textures[1]->getTexturePositionID());
+        shaderPtr->setVec4f("lightColor", renderEnv->getLights()[0]->getLightColor());
+        shaderPtr->setVec3f("lightPosition", renderEnv->getLights()[0]->getTranslation());
+        shaderPtr->setVec4f("objectColor", object->getMaterial()->getColor());
+        shaderPtr->setFloat("ambientStrength", renderEnv->getAmbientStrength());
     });
 
     auto texture1 = std::make_shared<Texture>(FileSystem::RelativePath("Assert/MisterWhite.png"));
@@ -92,13 +92,40 @@ int main()
     boxObject->setMesh(MeshFactory::GetBoxMesh());
     boxObject->setTransform(glm::mat4(1.0f));
 
+    // create the light cube
+    auto lightShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/Light.vs"), 
+                            FileSystem::RelativePath("Assert/Shaders/Light.fs"));
+    lightShader->setShaderFunc([shaderPtr = lightShader->shared_from_this()](std::shared_ptr<Camera> camera, 
+                                                                            std::shared_ptr<Object> object,
+                                                                            std::shared_ptr<RenderEnv> renderEnv){
+        shaderPtr->use();
+        shaderPtr->setVec4f("color", object->getMaterial()->getColor());
+        shaderPtr->setMat4f("model", object->getTransform());
+        shaderPtr->setMat4f("view", camera->getViewMatrix());
+        shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
+    });
+    auto materialLight = std::make_shared<Material>();
+    materialLight->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    auto lightObject = std::make_shared<Light>();
+    lightObject->setMaterial(materialLight);
+    lightObject->setMesh(MeshFactory::GetBoxMesh());
+    lightObject->setLightColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    glm::mat4 lightScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+    glm::mat4 lightTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+    lightObject->setTransform(lightScale * lightTranslate);
+
+    renderEnv->addLight(lightObject);
+
     // the loop !
+    Render::Start(camera, renderEnv);
+
     while (!window.shouldClose()) {
         Time::Update();
         window.clearCache();
         camera->update(Time::GetDeltaTime());
-        Render::Start(camera);
         Render::Draw(defaultShader, boxObject);
+        Render::Draw(lightShader, lightObject);
 
         window.update();
     }

@@ -8,8 +8,9 @@
 #include <memory>
 #include "Camera.h"
 #include "Object.h"
+#include "RenderEnv.h"
 
-using ShaderFunc = std::function<void(std::shared_ptr<Camera>, std::shared_ptr<Object>)>;
+using ShaderFunc = std::function<void(std::shared_ptr<Camera>, std::shared_ptr<Object>, std::shared_ptr<RenderEnv>)>;
 
 class Shader : public std::enable_shared_from_this<Shader>
 {
@@ -26,13 +27,14 @@ public:
     void setFloat(const char* variableName, float value) const;
     void setMat4f(const char* variableName, const glm::mat4& mat4) const;
     void setVec3f(const char* variableName, const glm::vec3& vec3) const;
+    void setVec4f(const char* variableName, const glm::vec4& vec4) const;
 public:
     unsigned int getShaderProgramID() const { return mShaderProgramID; }
 private:
     unsigned int mShaderProgramID;
 public:
     void setShaderFunc(ShaderFunc func) { shaderFunc = func;}
-    void applyShaderFunc(std::shared_ptr<Camera>, std::shared_ptr<Object>);
+    void applyShaderFunc(std::shared_ptr<Camera>, std::shared_ptr<Object>, std::shared_ptr<RenderEnv>);
 private:
     ShaderFunc shaderFunc;
 };
