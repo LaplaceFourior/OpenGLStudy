@@ -4,8 +4,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <functional>
+#include <memory>
+#include "Camera.h"
+#include "Object.h"
 
-class Shader
+using ShaderFunc = std::function<void(std::shared_ptr<Camera>, std::shared_ptr<Object>)>;
+
+class Shader : public std::enable_shared_from_this<Shader>
 {
 public:
     Shader(const std::string& vertexFilePath, const std::string& fragmentFilePath);
@@ -24,4 +30,9 @@ public:
     unsigned int getShaderProgramID() const { return mShaderProgramID; }
 private:
     unsigned int mShaderProgramID;
+public:
+    void setShaderFunc(ShaderFunc func) { shaderFunc = func;}
+    void applyShaderFunc(std::shared_ptr<Camera>, std::shared_ptr<Object>);
+private:
+    ShaderFunc shaderFunc;
 };

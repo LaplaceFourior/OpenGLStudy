@@ -113,5 +113,10 @@ void Shader::setVec3f(const char* variableName, const glm::vec3& vec3) const
 {
     glUniform3f(glGetUniformLocation(mShaderProgramID, variableName), vec3.x, vec3.y, vec3.z);
 }
-
+void Shader::applyShaderFunc(std::shared_ptr<Camera> camera, std::shared_ptr<Object> object)
+{
+    if (shaderFunc) {
+        shaderFunc(camera, object);
+    }
+}
 
