@@ -59,6 +59,7 @@ Texture::Texture(const std::string& filePath)
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::bind()
@@ -81,5 +82,6 @@ void Texture::unbind()
     if (texturePositionID != (unsigned int)-1) {
         sTextureManager.freeTexture(texturePositionID);
         texturePositionID = -1;
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 }
