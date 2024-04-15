@@ -12,23 +12,17 @@ public:
     Material() = default;
     ~Material() = default;
 public:
-    void addTexture(std::shared_ptr<Texture> texture) { mTextures.push_back(texture); }
-    void setAmbient(const glm::vec3& ambient) { mAmbient = ambient; }
-    void setDiffuse(const glm::vec3& diffuse) { mDiffuse = diffuse; }
-    void setSpecular(const glm::vec3& specular) { mSpecular = specular; }
+    void setDiffuseTexture(std::shared_ptr<Texture> texture) { mDiffuse = texture; }
+    void setSpecularTexture(std::shared_ptr<Texture> texture) { mSpecular = texture; }
     void setShininess(float shininess) { mShininess = shininess; }
 
-    std::vector<std::shared_ptr<Texture>> getTextures() const { return mTextures; };
     float getShininess() const { return mShininess; }
-    const glm::vec3& getAmbient() const { return mAmbient; }
-    const glm::vec3& getDiffuse() const { return mDiffuse; }
-    const glm::vec3& getSpecular() const { return mSpecular; }
-    glm::vec3 getColor();
+    std::shared_ptr<Texture> getDiffuseTexture() const { return mDiffuse; }
+    std::shared_ptr<Texture> getSpecularTexture() const { return mSpecular; }
 private:
     std::vector<std::shared_ptr<Texture>> mTextures;
-    glm::vec3 mAmbient;
-    glm::vec3 mDiffuse;
-    glm::vec3 mSpecular;
+    std::shared_ptr<Texture> mDiffuse;
+    std::shared_ptr<Texture> mSpecular;
     float mShininess;
 };
 

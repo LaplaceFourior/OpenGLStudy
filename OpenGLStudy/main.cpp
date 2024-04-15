@@ -60,20 +60,14 @@ int main()
                                                                                 std::shared_ptr<Object> object,
                                                                                 std::shared_ptr<RenderEnv> renderEnv) {
         // set the background color
-        auto textures = object->getMaterial()->getTextures();
-        for (auto& texture : textures) {
-            texture->bind();
-        }
         shaderPtr->use();
 
-        shaderPtr->setBool("useTexture", false);
+        object->getMaterial()->getDiffuseTexture()->bind();
+        object->getMaterial()->getSpecularTexture()->bind();
 
         shaderPtr->setMat4f("model", object->getTransform());
         shaderPtr->setMat4f("view", camera->getViewMatrix());
         shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
-        
-        shaderPtr->setInt("texture1", textures[0]->getTexturePositionID());
-        shaderPtr->setInt("texture2", textures[1]->getTexturePositionID());
         
         shaderPtr->setVec3f("light.position", renderEnv->getLights()[0]->getTranslation());
         shaderPtr->setVec3f("light.ambient", renderEnv->getLights()[0]->getAmbient());
@@ -81,24 +75,20 @@ int main()
         shaderPtr->setVec3f("light.specular", renderEnv->getLights()[0]->getSpecular());
 
         shaderPtr->setFloat("material.shininess", object->getMaterial()->getShininess());
-        shaderPtr->setVec3f("material.ambient", object->getMaterial()->getAmbient());
-        shaderPtr->setVec3f("material.diffuse", object->getMaterial()->getDiffuse());
-        shaderPtr->setVec3f("material.specular", object->getMaterial()->getSpecular());
+        shaderPtr->setInt("material.diffuse", object->getMaterial()->getDiffuseTexture()->getTexturePositionID());
+        shaderPtr->setInt("material.specular", object->getMaterial()->getSpecularTexture()->getTexturePositionID());
         
         
         shaderPtr->setVec3f("viewPos", camera->getTranslation());
     });
 
-    auto texture1 = std::make_shared<Texture>(FileSystem::RelativePath("Assert/MisterWhite.png"));
-    auto texture2 = std::make_shared<Texture>(FileSystem::RelativePath("Assert/godot3D.png"));
+    auto boxTexture = std::make_shared<Texture>(FileSystem::RelativePath("Assert/box.png"));
+    auto boxSpecularTexture = std::make_shared<Texture>(FileSystem::RelativePath("Assert/box_specular.png"));
     
     auto boxMaterial = std::make_shared<Material>();
-    boxMaterial->setAmbient(glm::vec3(1.0f, 0.5f, 0.31f));
-    boxMaterial->setDiffuse(glm::vec3(1.0f, 0.5f, 0.31f));
-    boxMaterial->setSpecular(glm::vec3(0.5f, 0.5f, 0.5f));
+    boxMaterial->setDiffuseTexture(boxTexture);
+    boxMaterial->setSpecularTexture(boxSpecularTexture);
     boxMaterial->setShininess(50.0f);
-    boxMaterial->addTexture(texture1);
-    boxMaterial->addTexture(texture2);
 
     auto boxObject = std::make_shared<Object>();
     boxObject->setMaterial(boxMaterial);
