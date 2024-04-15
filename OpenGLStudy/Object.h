@@ -35,8 +35,15 @@ private:
 class Light : public Object
 {
 public:
-    void setLightColor(const glm::vec4& lightColor) { mLightColor = lightColor; }
-    const glm::vec4& getLightColor() const { return mLightColor; }
+    void setAmbient(const glm::vec3& ambient) { mAmbient = ambient; }
+    void setDiffuse(const glm::vec3& diffuse) { mDiffuse = diffuse; }
+    void setSpecular(const glm::vec3& specular) { mSpecular = specular; }
+
+    const glm::vec3& getAmbient() const { return mAmbient; }
+    const glm::vec3& getDiffuse() const { return mDiffuse; }
+    const glm::vec3& getSpecular() const { return mSpecular; }
 private:
-    glm::vec4 mLightColor;
+    glm::vec3 mAmbient;
+    glm::vec3 mDiffuse;
+    glm::vec3 mSpecular;
 };

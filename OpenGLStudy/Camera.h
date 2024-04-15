@@ -20,6 +20,7 @@ public:
     void move(Direction direction, float deltaTime);
     void turnAround(float xOffset, float yOffset);
     void update(float deltaTime);
+    const glm::vec3& getTranslation() const { return cameraPosition;}
 private:
     float cameraSpeed = 2.0f;
     glm::vec3 cameraPosition;

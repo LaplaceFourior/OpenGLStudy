@@ -49,10 +49,9 @@ int main()
     auto camera = std::make_shared<Camera>();
     camera->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     camera->setLookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-
-    auto renderEnv = std::make_shared<RenderEnv>();
-    renderEnv->setAmbientStrength(0.1f);
     
+    auto renderEnv = std::make_shared<RenderEnv>();
+
     // create the shader
     auto defaultShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/default.vs"), 
                             FileSystem::RelativePath("Assert/Shaders/default.fs"));
@@ -67,28 +66,42 @@ int main()
         }
         shaderPtr->use();
 
-        shaderPtr->setBool("useTexture", true);
+        shaderPtr->setBool("useTexture", false);
+
         shaderPtr->setMat4f("model", object->getTransform());
         shaderPtr->setMat4f("view", camera->getViewMatrix());
         shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
+        
         shaderPtr->setInt("texture1", textures[0]->getTexturePositionID());
         shaderPtr->setInt("texture2", textures[1]->getTexturePositionID());
-        shaderPtr->setVec4f("lightColor", renderEnv->getLights()[0]->getLightColor());
-        shaderPtr->setVec3f("lightPosition", renderEnv->getLights()[0]->getTranslation());
-        shaderPtr->setVec4f("objectColor", object->getMaterial()->getColor());
-        shaderPtr->setFloat("ambientStrength", renderEnv->getAmbientStrength());
+        
+        shaderPtr->setVec3f("light.position", renderEnv->getLights()[0]->getTranslation());
+        shaderPtr->setVec3f("light.ambient", renderEnv->getLights()[0]->getAmbient());
+        shaderPtr->setVec3f("light.diffuse", renderEnv->getLights()[0]->getDiffuse());
+        shaderPtr->setVec3f("light.specular", renderEnv->getLights()[0]->getSpecular());
+
+        shaderPtr->setFloat("material.shininess", object->getMaterial()->getShininess());
+        shaderPtr->setVec3f("material.ambient", object->getMaterial()->getAmbient());
+        shaderPtr->setVec3f("material.diffuse", object->getMaterial()->getDiffuse());
+        shaderPtr->setVec3f("material.specular", object->getMaterial()->getSpecular());
+        
+        
+        shaderPtr->setVec3f("viewPos", camera->getTranslation());
     });
 
     auto texture1 = std::make_shared<Texture>(FileSystem::RelativePath("Assert/MisterWhite.png"));
     auto texture2 = std::make_shared<Texture>(FileSystem::RelativePath("Assert/godot3D.png"));
     
-    auto materialBox = std::make_shared<Material>();
-    materialBox->setColor(glm::vec4(1.0f, 5.0f, 2.0f, 1.0f));
-    materialBox->addTexture(texture1);
-    materialBox->addTexture(texture2);
+    auto boxMaterial = std::make_shared<Material>();
+    boxMaterial->setAmbient(glm::vec3(1.0f, 0.5f, 0.31f));
+    boxMaterial->setDiffuse(glm::vec3(1.0f, 0.5f, 0.31f));
+    boxMaterial->setSpecular(glm::vec3(0.5f, 0.5f, 0.5f));
+    boxMaterial->setShininess(50.0f);
+    boxMaterial->addTexture(texture1);
+    boxMaterial->addTexture(texture2);
 
     auto boxObject = std::make_shared<Object>();
-    boxObject->setMaterial(materialBox);
+    boxObject->setMaterial(boxMaterial);
     boxObject->setMesh(MeshFactory::GetBoxMesh());
     boxObject->setTransform(glm::mat4(1.0f));
 
@@ -99,20 +112,22 @@ int main()
                                                                             std::shared_ptr<Object> object,
                                                                             std::shared_ptr<RenderEnv> renderEnv){
         shaderPtr->use();
-        shaderPtr->setVec4f("color", object->getMaterial()->getColor());
+        shaderPtr->setVec3f("color", std::static_pointer_cast<LightMaterial>(object->getMaterial())->getLightColor());
         shaderPtr->setMat4f("model", object->getTransform());
         shaderPtr->setMat4f("view", camera->getViewMatrix());
         shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
     });
-    auto materialLight = std::make_shared<Material>();
-    materialLight->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    auto materialLight = std::make_shared<LightMaterial>();
+    materialLight->setLightColor(glm::vec3(1.0f, 1.0f, 1.0f));
 
     auto lightObject = std::make_shared<Light>();
     lightObject->setMaterial(materialLight);
     lightObject->setMesh(MeshFactory::GetBoxMesh());
-    lightObject->setLightColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    lightObject->setAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
+    lightObject->setDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
+    lightObject->setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
     glm::mat4 lightScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
-    glm::mat4 lightTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+    glm::mat4 lightTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f));
     lightObject->setTransform(lightScale * lightTranslate);
 
     renderEnv->addLight(lightObject);
