@@ -90,10 +90,32 @@ int main()
     boxMaterial->setSpecularTexture(boxSpecularTexture);
     boxMaterial->setShininess(50.0f);
 
-    auto boxObject = std::make_shared<Object>();
-    boxObject->setMaterial(boxMaterial);
-    boxObject->setMesh(MeshFactory::GetBoxMesh());
-    boxObject->setTransform(glm::mat4(1.0f));
+    // create a lot of boxes
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+    std::vector<std::shared_ptr<Object>> boxes;
+    for (int i = 0; i < 10; i++) {
+        auto box = std::make_shared<Object>();
+        box->setMaterial(boxMaterial);
+        box->setMesh(MeshFactory::GetBoxMesh());
+        glm::mat4 tranalate = glm::translate(glm::mat4(1.0f), cubePositions[i]);
+        glm::vec3 rotationRadians = glm::radians(cubePositions[i]);
+        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), rotationRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        rotation = glm::rotate(rotation, rotationRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        rotation = glm::rotate(rotation, rotationRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        box->setTransform(tranalate * rotation);
+        boxes.push_back(box);
+    }
 
     // create the light cube
     auto lightShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/Light.vs"), 
@@ -129,7 +151,9 @@ int main()
         Time::Update();
         window.clearCache();
         camera->update(Time::GetDeltaTime());
-        Render::Draw(defaultShader, boxObject);
+        for(const auto& box : boxes) {
+            Render::Draw(defaultShader, box);
+        }
         Render::Draw(lightShader, lightObject);
 
         window.update();
