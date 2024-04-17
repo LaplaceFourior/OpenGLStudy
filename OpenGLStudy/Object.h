@@ -32,6 +32,8 @@ private:
     glm::vec3 mScale;
 };
 
+
+
 class Light : public Object
 {
 public:
@@ -46,4 +48,44 @@ private:
     glm::vec3 mAmbient;
     glm::vec3 mDiffuse;
     glm::vec3 mSpecular;
+};
+
+class DirectLight : public Light
+{
+};
+
+class PointLight : public Light 
+{
+public:
+    float getConstant() const { return mConstant; }
+    void setConstant(float constant) { mConstant = constant; }
+
+    float getLinear() const { return mLinear; }
+    void setLinear(float linear) { mLinear = linear; }
+
+    float getQuadratic() const { return mQuadratic; }
+    void setQuadratic(float quadratic) { mQuadratic = quadratic; }
+
+private:
+    float mConstant;
+    float mLinear;
+    float mQuadratic;
+};
+
+class SpotLight : public Light 
+{
+public:
+    const glm::vec3& getDirection() const { return direction; }
+    void setDirection(const glm::vec3& dir) { direction = dir; }
+
+    float getCutOff() const { return cutOff; }
+    void setCutOff(float cutoff) { cutOff = cutoff; }
+
+    float getOuterCutOff() const { return outerCutOff; }
+    void setOuterCutOff(float outerCutOff) { outerCutOff = outerCutOff; }
+
+private:
+    glm::vec3 direction;
+    float cutOff;
+    float outerCutOff;
 };
