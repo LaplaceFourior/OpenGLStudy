@@ -8,10 +8,19 @@ public:
     TransformComponent() = default;
     ~TransformComponent() = default;
 public:
-    void setPosition(const glm::vec3& position);
-    const glm::mat4& getTransform() const { return mTransform; };
+    void setTransform(const glm::mat4& transform);
+    void setTranslation(const glm::vec3& translation);
+    void setRotation(const glm::vec3& rotation);
+    void setScale(const glm::vec3& scale);
+    const glm::mat4& getTransform() const { return mTransform; }
+    const glm::vec3& getTranslation() const { return mTranslate; }
+    const glm::vec3& getRotation() const { return mRotation; }
+    const glm::vec3& getScale() const { return mScale; }
+    void updateTransform();
 private:
     glm::mat4 mTransform;
-
+    glm::vec3 mTranslate;
+    glm::vec3 mRotation;
+    glm::vec3 mScale;
 };
 

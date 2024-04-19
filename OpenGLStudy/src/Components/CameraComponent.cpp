@@ -1,10 +1,12 @@
 #include "Components/CameraComponent.h"
 #include "Input.h"
+#include "Objects/BaseObject.h"
+#include "COmponents/TransformComponent.h"
 
 void CameraComponent::setLookAtTarget(const glm::vec3 &lookAtTarget)
 {
     cameraLookAtTarget = lookAtTarget;
-    cameraFrontDirection = glm::normalize(cameraLookAtTarget - cameraPosition);
+    cameraFrontDirection = glm::normalize(cameraLookAtTarget - mTransforComponent->getTranslation());
     cameraRightDirection = glm::cross(cameraFrontDirection, cameraUpDirection);
 
     float x = cameraFrontDirection.x;
@@ -17,26 +19,26 @@ void CameraComponent::setLookAtTarget(const glm::vec3 &lookAtTarget)
 
 glm::mat4 CameraComponent::getViewMatrix() const
 {
-    return glm::lookAt(cameraPosition, cameraPosition + cameraFrontDirection, cameraUpDirection);
+    return glm::lookAt(mTransforComponent->getTranslation(), mTransforComponent->getTranslation() + cameraFrontDirection, cameraUpDirection);
 }
 void CameraComponent::move(Direction direction, float deltaTime)
 {
     float speed = cameraSpeed * deltaTime;
 
     if( direction == Direction::FORWARD ) {
-        cameraPosition += speed * cameraFrontDirection; 
+        mTransforComponent->setTranslation(mTransforComponent->getTranslation() + speed * cameraFrontDirection); 
     }
     
     if( direction == Direction::BACKWARD ) {
-        cameraPosition -= speed * cameraFrontDirection; 
+        mTransforComponent->setTranslation(mTransforComponent->getTranslation() - speed * cameraFrontDirection); 
     }
     
     if( direction == Direction::LEFT ) {
-        cameraPosition -= speed * cameraRightDirection; 
+        mTransforComponent->setTranslation(mTransforComponent->getTranslation() - speed * cameraRightDirection);
     }
 
     if( direction == Direction::RIGHT ) {
-        cameraPosition += speed * cameraRightDirection;
+        mTransforComponent->setTranslation(mTransforComponent->getTranslation() + speed * cameraRightDirection);
     }
 }
 
@@ -59,6 +61,7 @@ void CameraComponent::turnAround(float xOffset, float yOffset)
 
 void CameraComponent::update(float deltaTime)
 {
+    syncCameraPosition();
     if (Input::IsKeyPressed(GLFW_KEY_W)) {
         move(Direction::FORWARD, deltaTime);
     }
@@ -78,5 +81,5 @@ void CameraComponent::update(float deltaTime)
 
 void CameraComponent::syncCameraPosition()
 {
-    
+    mTransforComponent = mBaseObject->getComponent<TransformComponent>().get();
 }

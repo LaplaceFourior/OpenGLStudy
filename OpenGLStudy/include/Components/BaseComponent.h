@@ -11,8 +11,10 @@ public:
     BaseComponent() = default;
     virtual ~BaseComponent() = default;
 public:
+    virtual void update(float deltaTime);
+public:
     void setObject(BaseObject* baseObject) { mBaseObject = baseObject; }
-private:
+protected:
     BaseObject* mBaseObject;
 };
 

@@ -57,7 +57,7 @@ int main()
     auto cameraComponent = cameraObject->createComponent<CameraComponent>();
     auto cameraTransformComponent = cameraObject->createComponent<TransformComponent>();
     // camera settings
-    cameraTransformComponent->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+    cameraTransformComponent->setTranslation(glm::vec3(0.0f, 0.0f, 3.0f));
     cameraComponent->setLookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
     
     auto boxObject = scene.createObject<BaseObject>("boxOne");
@@ -150,7 +150,7 @@ int main()
 
     auto lightObject = scene.createObject<BaseObject>("lightOne");
     auto lightTransformComponent = lightObject->createComponent<TransformComponent>();
-    lightTransformComponent->setPosition(glm::vec3(5.0f, 5.0f, 5.0f));
+    lightTransformComponent->setTranslation(glm::vec3(5.0f, 5.0f, 5.0f));
     auto lightLightComponent = lightObject->createComponent<DirectLightComponent>();
     lightLightComponent->setAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
     lightLightComponent->setDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
