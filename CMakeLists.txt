@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(RenderEngine)
+project(RenderStudy)
 
-add_definitions(-DPROJECT_PATH="${CMAKE_SOURCE_DIR}")
+add_definitions(-DPROJECT_PATH="${PROJECT_SOURCE_DIR}")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,3 +23,4 @@ include_directories(
 
 add_subdirectory(OpenGLStudy)
 add_subdirectory(VulkanStudy)
+add_subdirectory(Application)
