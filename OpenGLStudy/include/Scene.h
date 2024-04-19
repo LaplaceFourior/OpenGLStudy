@@ -35,12 +35,14 @@ public:
     std::vector<std::shared_ptr<BaseObject>> getObjectsWithComponents() {
         std::vector<std::shared_ptr<BaseObject>> results;
         for (auto& object : mAllObjects) {
-            if (object->hasComponent<Components>() && ...) {
+            if ((object->hasComponent<Components>() && ...)) {
                 results.push_back(object);
             }
         }
         return results;
     }
+
+    void update(float deltaTime);
 
 private:
     std::vector<std::shared_ptr<BaseObject>>  mAllObjects;

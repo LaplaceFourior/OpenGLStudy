@@ -4,9 +4,7 @@
 
 class NameComponent : public BaseComponent
 {
-    friend class Scene;
-    friend class BaseComponent;
-private:
+public:
     NameComponent(const std::string& name):
                 mName(name)
     {}

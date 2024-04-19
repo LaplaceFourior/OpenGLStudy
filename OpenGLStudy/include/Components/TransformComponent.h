@@ -4,10 +4,14 @@
 
 class TransformComponent : public BaseComponent 
 {
-    friend class Scene;
-    friend class BaseComponent;
-private:
+public:
     TransformComponent() = default;
     ~TransformComponent() = default;
+public:
+    void setPosition(const glm::vec3& position);
+    const glm::mat4& getTransform() const { return mTransform; };
+private:
+    glm::mat4 mTransform;
+
 };
 

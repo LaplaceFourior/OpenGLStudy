@@ -5,6 +5,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 #include "Components/NameComponent.h"
+#include "Objects/BaseObject.h"
 
 // void Object::setTransform(const glm::mat4& transform)
 // {
@@ -45,4 +46,7 @@
 //     mTransform = glm::translate(mTransform, mTranslation);
 // }
 
-// addComponent<NameComponent>(std::make_shared<NameComponent>(name));
+BaseObject::BaseObject(const std::string &name)
+{
+    createComponent<NameComponent>(name);
+}

@@ -4,11 +4,11 @@
 
 class IDComponent : public BaseComponent 
 {
-    friend class Scene;
-    friend class BaseComponent;
-private:
+public:
     IDComponent() = default;
     ~IDComponent() = default;
+friend class Scene;
+friend class BaseComponent;
 public:
     const UUID& getID() const { return mUUID; }
 private:
