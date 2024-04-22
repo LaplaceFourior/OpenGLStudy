@@ -9,3 +9,10 @@ BaseObject::BaseObject(const std::string &name)
 {
     createComponent<NameComponent>(name);
 }
+
+void BaseObject::update(float deltaTime)
+{
+    for (const auto& component : mAllComponents) {
+        component.second->update(deltaTime);
+    }
+}

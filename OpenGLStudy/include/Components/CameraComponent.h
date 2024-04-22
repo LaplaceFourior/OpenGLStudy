@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Components/BaseComponent.h"
+#include <memory>
+#include "BaseComponent.h"
+#include "TransformComponent.h"
 
 enum Direction {
     FORWARD,
@@ -9,12 +11,11 @@ enum Direction {
     RIGHT
 };
 
-class TransformComponent;
 
 class CameraComponent : public BaseComponent 
 {
 public:
-    CameraComponent() = default;
+    CameraComponent();
     ~CameraComponent() = default;
 public:
     void setLookAtTarget(const glm::vec3& lookAtTarget);
@@ -22,6 +23,8 @@ public:
     void move(Direction direction, float deltaTime);
     void turnAround(float xOffset, float yOffset);
     virtual void update(float deltaTime) override;
+    void setActive(bool active) { bActive = active; }
+    bool isActive() const { return bActive; }
 private:
     void syncCameraPosition();
 private:
@@ -31,11 +34,13 @@ private:
     glm::vec3 cameraFrontDirection;
     glm::vec3 cameraRightDirection;
     glm::vec3 cameraUpDirection = glm::vec3(0.0f, 1.0f, 0.0f);
-    TransformComponent* mTransforComponent;
+    std::shared_ptr<TransformComponent> mTransforComponent;
 
     float cameraLookSensitive = 0.05f;
     float yaw = 0.0f;
     float pitch = 0.0f;
+private:
+    bool bActive = false;
 
 };
 

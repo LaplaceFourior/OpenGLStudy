@@ -37,7 +37,7 @@ public:
     }
 
     template<typename... Components>
-    std::tuple<std::shared_ptr<Components>...> getComponents() const {
+    std::tuple<std::shared_ptr<Components>...> getComponents() {
         return std::make_tuple(getComponent<Components>()...);
     }
 
@@ -47,7 +47,9 @@ public:
         return mAllComponents.find(std::type_index(typeid(T))) != mAllComponents.end();
     }
 
-public:
+    void update(float deltaTime);
+
+private:
     std::unordered_map<std::type_index, std::shared_ptr<BaseComponent>> mAllComponents;
 
 private:

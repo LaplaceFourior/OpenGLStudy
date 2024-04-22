@@ -3,8 +3,13 @@
 #include "Objects/BaseObject.h"
 #include "COmponents/TransformComponent.h"
 
+CameraComponent::CameraComponent()
+{
+}
+
 void CameraComponent::setLookAtTarget(const glm::vec3 &lookAtTarget)
 {
+    syncCameraPosition();
     cameraLookAtTarget = lookAtTarget;
     cameraFrontDirection = glm::normalize(cameraLookAtTarget - mTransforComponent->getTranslation());
     cameraRightDirection = glm::cross(cameraFrontDirection, cameraUpDirection);
@@ -81,5 +86,9 @@ void CameraComponent::update(float deltaTime)
 
 void CameraComponent::syncCameraPosition()
 {
-    mTransforComponent = mBaseObject->getComponent<TransformComponent>().get();
+    if (mBaseObject) {
+        if (mBaseObject->hasComponent<TransformComponent>()) {
+            mTransforComponent = mBaseObject->getComponent<TransformComponent>();
+        }
+    }
 }

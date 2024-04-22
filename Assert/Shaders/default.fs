@@ -51,11 +51,13 @@ in vec3 FragmentPosition;
 
 uniform vec3 viewPos;
 uniform Material material;
-uniform DirectLight directLight;
+#define NR_DIRECT_LIGHTS 10
+uniform DirectLight directLights[NR_DIRECT_LIGHTS];
 #define NR_POINT_LIGHTS 10
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 #define NR_SPOT_LIGHTS 10
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
+uniform int directLightNumber;
 uniform int pointLightNumber;
 uniform int spotLightNumber;
 
@@ -66,7 +68,7 @@ vec3 calculateDirectLight(DirectLight light)
 
     // diff
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(-light.direction);
+    vec3 lightDir = normalize(light.direction);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
     
@@ -142,7 +144,10 @@ vec3 calculateSpotLight(SpotLight light)
 
 void main()
 {
-    vec3 result = calculateDirectLight(directLight);
+    vec3 result;
+    for (int i = 0; i < directLightNumber; i++) {
+        result += calculateDirectLight(directLights[i]);
+    }
     for (int i = 0; i < pointLightNumber; i++) {
         result += calculatePointLight(pointLights[i]);
     }

@@ -40,3 +40,9 @@ void TransformComponent::updateTransform()
 
     mTransform = glm::translate(mTransform, mTranslate);
 }
+
+const glm::mat4& TransformComponent::getTransform() 
+{   
+    updateTransform();
+    return mTransform; 
+}

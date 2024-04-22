@@ -42,27 +42,28 @@ enum RenderThreadMode {
 int main() 
 {
     Window window(WIDTH, HEIGH, "finish a scene by myself");
+    window.setActive();
     window.enableDepthTest(true);
     window.setMouseVisible(false);
     window.setBackgroundColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
     // capture mouse input
-    // why process mouse here? out the loop ? how to combine mouse process and keyboard process ?
     Input::Init(&window);
     Time::Init();
     MeshFactory::Init();
 
     Scene scene;
     auto cameraObject = scene.createObject<BaseObject>("cameraOne");
-    auto cameraComponent = cameraObject->createComponent<CameraComponent>();
     auto cameraTransformComponent = cameraObject->createComponent<TransformComponent>();
+    auto cameraComponent = cameraObject->createComponent<CameraComponent>();
     // camera settings
     cameraTransformComponent->setTranslation(glm::vec3(0.0f, 0.0f, 3.0f));
     cameraComponent->setLookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
+    cameraComponent->setActive(true);
     
     auto boxObject = scene.createObject<BaseObject>("boxOne");
     auto boxTransformComponent = boxObject->createComponent<TransformComponent>();
-    auto boxMeshComponent = boxObject->createComponent<MeshComponent>();
+    auto boxMeshComponent = boxObject->createComponent<MeshComponent>(MeshFactory::GetBoxMesh());
     
     auto boxTexture = std::make_shared<Texture>(FileSystem::RelativePath("Assert/box.png"));
     auto boxSpecularTexture = std::make_shared<Texture>(FileSystem::RelativePath("Assert/box_specular.png"));
@@ -81,8 +82,8 @@ int main()
         std::vector<std::shared_ptr<PointLightComponent>> pointLights,
         std::vector<std::shared_ptr<SpotLightComponent>> spotLights,
         const glm::vec3& cameraPosition,
-        const glm::mat4& cameraTransform,
-        const glm::mat4& modelTransform
+        const glm::mat4& viewMatrix,
+        const glm::mat4& modelMatrix
     ) {
         // set the background color
         shaderPtr->use();
@@ -90,8 +91,8 @@ int main()
         material->getDiffuseTexture()->bind();
         material->getSpecularTexture()->bind();
 
-        shaderPtr->setMat4f("model", modelTransform);
-        shaderPtr->setMat4f("view", cameraTransform);
+        shaderPtr->setMat4f("model", modelMatrix);
+        shaderPtr->setMat4f("view", viewMatrix);
         shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
         shaderPtr->setVec3f("viewPos", cameraPosition);
         
@@ -100,16 +101,17 @@ int main()
 
         for (const auto& directLight : directLights) {    
             // Direct light
-            shaderPtr->setVec3f("directLight.direction", -directLight->getDirection());
-            shaderPtr->setVec3f("directLight.ambient", directLight->getAmbient());
-            shaderPtr->setVec3f("directLight.diffuse", directLight->getDiffuse());
-            shaderPtr->setVec3f("directLight.specular", directLight->getSpecular());  
+            std::string baseName = "directLights[" + std::to_string(i) + "]";
 
-            shaderPtr->setInt("pointLightNumber", directLights.size());
-            shaderPtr->setInt("spotLightNumber", directLights.size());
+            shaderPtr->setVec3f((baseName + ".direction").c_str(), -directLight->getDirection());
+            shaderPtr->setVec3f((baseName + ".ambient").c_str(), directLight->getAmbient());
+            shaderPtr->setVec3f((baseName + ".diffuse").c_str(), directLight->getDiffuse());
+            shaderPtr->setVec3f((baseName + ".specular").c_str(), directLight->getSpecular());  
+
+            i++;
         }
 
-
+        i = 0;
         for (const auto& pointLight : pointLights) {
             std::string baseName = "pointLights[" + std::to_string(i) + "]";
 
@@ -143,18 +145,44 @@ int main()
         shaderPtr->setInt("material.diffuse", material->getDiffuseTexture()->getTexturePositionID());
         shaderPtr->setInt("material.specular", material->getSpecularTexture()->getTexturePositionID());
         
+        shaderPtr->setInt("directLightNumber", directLights.size());
+        shaderPtr->setInt("pointLightNumber", pointLights.size());
+        shaderPtr->setInt("spotLightNumber", spotLights.size());
         
     });
     boxMeshComponent->setShader(defaultShader);
     boxMeshComponent->setMaterial(boxMaterial);
 
+
+
     auto lightObject = scene.createObject<BaseObject>("lightOne");
     auto lightTransformComponent = lightObject->createComponent<TransformComponent>();
-    lightTransformComponent->setTranslation(glm::vec3(5.0f, 5.0f, 5.0f));
+    lightTransformComponent->setTranslation(glm::vec3(0.0f, 0.0f, 0.0f));
     auto lightLightComponent = lightObject->createComponent<DirectLightComponent>();
     lightLightComponent->setAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
     lightLightComponent->setDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
     lightLightComponent->setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
+    lightLightComponent->setDirection(glm::vec3(-3.0f, -3.0f, -3.0f));
+    // // create the light cube
+    // auto lightShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/Light.vs"), 
+    //                         FileSystem::RelativePath("Assert/Shaders/Light.fs"));
+    // lightShader->setShaderFunc([shaderPtr = lightShader->shared_from_this()](
+    //         std::shared_ptr<Material> material,
+    //         std::vector<std::shared_ptr<DirectLightComponent>> directLights,
+    //         std::vector<std::shared_ptr<PointLightComponent>> pointLights,
+    //         std::vector<std::shared_ptr<SpotLightComponent>> spotLights,
+    //         const glm::vec3& cameraPosition,
+    //         const glm::mat4& viewMatrix,
+    //         const glm::mat4& modelMatrix)
+    //     {
+    //     shaderPtr->use();
+    //     shaderPtr->setVec3f("color", glm::vec3(1.0f, 1.0f, 1.0f));
+    //     shaderPtr->setMat4f("model", modelMatrix);
+    //     shaderPtr->setMat4f("view", viewMatrix);
+    //     shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
+    // });
+    // auto lightMeshComponent = lightObject->createComponent<MeshComponent>(MeshFactory::GetBoxMesh());
+    // lightMeshComponent->setShader(lightShader);
 
     while (!window.shouldClose()) {
         Time::Update();
@@ -164,7 +192,7 @@ int main()
         window.update();
     }
     
-     return 0;  
+    return 0;  
 }
 
 

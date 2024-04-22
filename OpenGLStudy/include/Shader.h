@@ -16,8 +16,8 @@ using ShaderFunc = std::function<void(
         std::vector<std::shared_ptr<PointLightComponent>> pointLights,
         std::vector<std::shared_ptr<SpotLightComponent>> spotLights,
         const glm::vec3& cameraPosition,
-        const glm::mat4& cameraTransform,
-        const glm::mat4& modelTransform)>;
+        const glm::mat4& viewMatrix,
+        const glm::mat4& modelMatrix)>;
 
 class Shader : public std::enable_shared_from_this<Shader>
 {
@@ -46,8 +46,8 @@ public:
         std::vector<std::shared_ptr<PointLightComponent>> pointLights,
         std::vector<std::shared_ptr<SpotLightComponent>> spotLights,
         const glm::vec3& cameraPosition,
-        const glm::mat4& cameraTransform,
-        const glm::mat4& modelTransform);
+        const glm::mat4& viewMatrix,
+        const glm::mat4& modelMatrix);
 private:
     ShaderFunc shaderFunc;
 };

@@ -13,7 +13,7 @@ public:
 public:
     virtual void update(float deltaTime);
 public:
-    void setObject(BaseObject* baseObject) { mBaseObject = baseObject; }
+    void setObject(BaseObject* baseObject);
 protected:
     BaseObject* mBaseObject;
 };

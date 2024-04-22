@@ -122,11 +122,11 @@ void Shader::applyShaderFunc(std::shared_ptr<Material> material,
         std::vector<std::shared_ptr<PointLightComponent>> pointLights,
         std::vector<std::shared_ptr<SpotLightComponent>> spotLights,
         const glm::vec3& cameraPosition,
-        const glm::mat4& cameraTransform,
-        const glm::mat4& modelTransform)
+        const glm::mat4& viewMatrix,
+        const glm::mat4& modelMatrix)
 {
     if (shaderFunc) {
-        shaderFunc(material, directLights, pointLights, spotLights, cameraPosition, cameraTransform, modelTransform);
+        shaderFunc(material, directLights, pointLights, spotLights, cameraPosition, viewMatrix, modelMatrix);
     }
 }
 
