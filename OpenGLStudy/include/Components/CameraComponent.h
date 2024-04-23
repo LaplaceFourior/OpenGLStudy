@@ -22,9 +22,8 @@ public:
     glm::mat4 getViewMatrix() const;
     void move(Direction direction, float deltaTime);
     void turnAround(float xOffset, float yOffset);
-    virtual void update(float deltaTime) override;
-    void setActive(bool active) { bActive = active; }
-    bool isActive() const { return bActive; }
+    void update(float deltaTime) override;
+    const glm::vec3& getFrontDirection() const { return cameraFrontDirection; }
 private:
     void syncCameraPosition();
 private:
@@ -39,8 +38,6 @@ private:
     float cameraLookSensitive = 0.05f;
     float yaw = 0.0f;
     float pitch = 0.0f;
-private:
-    bool bActive = false;
 
 };
 

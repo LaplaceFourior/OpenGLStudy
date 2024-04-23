@@ -15,6 +15,7 @@ public:
     void setAmbient(const glm::vec3& ambient) { mAmbient = ambient; }
     void setDiffuse(const glm::vec3& diffuse) { mDiffuse = diffuse; }
     void setSpecular(const glm::vec3& specular) { mSpecular = specular; }
+    void update(float deltaTime) override;
 private:
     glm::vec3 mAmbient;
     glm::vec3 mDiffuse;
@@ -30,7 +31,7 @@ public:
 public:
     void setDirection(const glm::vec3& direction) { mDirection = direction; }
     const glm::vec3& getDirection() const { return mDirection; }
-
+    void update(float deltaTime) override;
 private:
     glm::vec3 mDirection;
 };
@@ -51,8 +52,8 @@ public:
     void setQuadratic(float quadratic) { mQuadratic = quadratic; }
 
     const glm::vec3& getPosition() const { return mPosition; }
-    void setPosition(const glm::vec3& position) { mPosition = position; }
 
+    void update(float deltaTime) override;
 private:
     glm::vec3 mPosition;
     float mConstant;
@@ -69,20 +70,21 @@ public:
     const glm::vec3& getDirection() const { return direction; }
     void setDirection(const glm::vec3& dir) { direction = dir; }
 
-    float getCutOff() const { return cutOff; }
-    void setCutOff(float cutoff) { cutOff = cutoff; }
+    float getCutOff() const { return mCutOff; }
+    void setCutOff(float cutoff) { mCutOff = cutoff; }
 
-    float getOuterCutOff() const { return outerCutOff; }
-    void setOuterCutOff(float outerCutOff) { outerCutOff = outerCutOff; }
+    float getOuterCutOff() const { return mOuterCutOff; }
+    void setOuterCutOff(float outerCutOff) { mOuterCutOff = outerCutOff; }
 
     const glm::vec3& getPosition() const { return mPosition; }
     void setPosition(const glm::vec3& position) { mPosition = position; }
 
-private:
+    void update(float deltaTime) override;
+protected:
     glm::vec3 mPosition;
     glm::vec3 direction;
-    float cutOff;
-    float outerCutOff;
+    float mCutOff;
+    float mOuterCutOff;
 };
 
 

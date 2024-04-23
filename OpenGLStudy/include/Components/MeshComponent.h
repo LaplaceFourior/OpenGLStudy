@@ -20,6 +20,7 @@ public:
     std::shared_ptr<Material> getMaterial() { return mMaterial; }
     std::shared_ptr<Shader> getShader() { return mShader; }
     std::shared_ptr<Mesh> getMesh() { return mMesh; }
+    void update(float deltaTime) override;
 private:
     std::shared_ptr<Material> mMaterial;
     std::shared_ptr<Shader> mShader;

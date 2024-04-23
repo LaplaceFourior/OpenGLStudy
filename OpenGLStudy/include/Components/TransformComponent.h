@@ -17,6 +17,7 @@ public:
     const glm::vec3& getRotation() const { return mRotation; }
     const glm::vec3& getScale() const { return mScale; }
     void updateTransform();
+    void update(float deltaTime) override;
 private:
     glm::mat4 mTransform;
     glm::vec3 mTranslate;

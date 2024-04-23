@@ -9,8 +9,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories (${OPENGL_RENDER_INCLUDE})
 
-add_executable(OpenGLTest
+set(APP_SOURCES
     main.cpp
+)
+
+set(APP_HEADERS
+)
+
+add_executable(OpenGLTest
+    ${APP_SOURCES}
+    ${APP_HEADERS}
 )
 
 

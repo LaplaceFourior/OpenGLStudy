@@ -13,19 +13,25 @@ void Render::Draw(Scene *scene)
     std::vector<std::shared_ptr<DirectLightComponent>> allDirectLightComponents;
     for (const auto& object : scene->getObjectsWithComponents<DirectLightComponent>()) {
         auto [component] = object->getComponents<DirectLightComponent>();
-        allDirectLightComponents.push_back(component);
+        if (component->isActive()) {
+            allDirectLightComponents.push_back(component);
+        }
     }
 
     std::vector<std::shared_ptr<PointLightComponent>> allPointLightComponents;
     for (const auto& object : scene->getObjectsWithComponents<PointLightComponent>()) {
         auto [component] = object->getComponents<PointLightComponent>();
-        allPointLightComponents.push_back(component);
+        if (component->isActive()) {
+            allPointLightComponents.push_back(component);
+        }
     }
 
     std::vector<std::shared_ptr<SpotLightComponent>> allSpotLightComponents;
     for (const auto& object : scene->getObjectsWithComponents<SpotLightComponent>()) {
         auto [component] = object->getComponents<SpotLightComponent>();
-        allSpotLightComponents.push_back(component);
+        if (component->isActive()) {
+            allSpotLightComponents.push_back(component);
+        }
     }
 
 

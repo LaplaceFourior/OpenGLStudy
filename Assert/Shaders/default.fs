@@ -113,38 +113,33 @@ vec3 calculateSpotLight(SpotLight light)
 {
     vec3 lightDir = normalize(light.position - FragmentPosition);
     float theta = dot(lightDir, normalize(-light.direction));
-    if (theta > light.cutOff) {
-        float epsilon   = light.cutOff - light.outerCutOff;
-        float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);   
-        // ambient
-        vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
+    float epsilon   = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);   
+    // ambient
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
 
-        // diff
-        vec3 norm = normalize(Normal);
-        float diff = max(dot(norm, lightDir), 0.0);
-        vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
-        
-        // specular
-        vec3 viewDir = normalize(viewPos - FragmentPosition);
-        vec3 reflectDir = reflect(-lightDir, norm);
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-        vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
+    // diff
+    vec3 norm = normalize(Normal);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
+    
+    // specular
+    vec3 viewDir = normalize(viewPos - FragmentPosition);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
 
-        diffuse *= intensity;
-        specular *= intensity;
+    diffuse *= intensity;
+    specular *= intensity;
 
-        return (ambient + diffuse + specular);
-
-    } else {
-        return light.ambient * vec3(texture(material.diffuse, TexCoord));
-    }
+    return (ambient + diffuse + specular);
     
 }
 
 
 void main()
 {
-    vec3 result;
+    vec3 result = vec3(0.0f, 0.0f, 0.0f);
     for (int i = 0; i < directLightNumber; i++) {
         result += calculateDirectLight(directLights[i]);
     }
