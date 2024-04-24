@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Register.h"
 #include "Input.h"
 #include "FileSystem.h"
 #include "TextRender2D.h"
@@ -29,6 +30,8 @@
 #include "Components/MeshComponent.h"
 #include "Components/LightComponent.h"
 
+#include "RegisterTypes.h"
+
 #define WIDTH 800
 #define HEIGH 600
 
@@ -40,6 +43,8 @@ enum RenderThreadMode {
 
 int main() 
 {
+    registerTypes();
+
     Window window(WIDTH, HEIGH, "finish a scene by myself");
     window.setActive();
     window.enableDepthTest(true);
@@ -52,7 +57,7 @@ int main()
     MeshFactory::Init();
 
     Scene scene;
-    auto cameraObject = scene.createObject<BaseObject>("cameraOne");
+    auto cameraObject = scene.createObject<BaseEntity>("cameraOne");
     auto cameraTransformComponent = cameraObject->createComponent<TransformComponent>();
     auto cameraComponent = cameraObject->createComponent<CameraComponent>();
     // camera settings
@@ -167,7 +172,7 @@ int main()
     for (unsigned int i = 0; i < 10; i++)
     {
         const std::string& boxName = "box-" + std::to_string(i);
-        auto boxObject = scene.createObject<BaseObject>(boxName);
+        auto boxObject = scene.createObject<BaseEntity>(boxName);
         auto boxTransformComponent = boxObject->createComponent<TransformComponent>();
         boxTransformComponent->setTranslation(cubePositions[i]);
         boxTransformComponent->setRotation(cubePositions[i]*cubePositions[i]);
@@ -186,7 +191,7 @@ int main()
 
 
     // direct light 
-    auto directLightObj = scene.createObject<BaseObject>("lightOne");
+    auto directLightObj = scene.createObject<BaseEntity>("lightOne");
     auto directLightLight = directLightObj->createComponent<DirectLightComponent>();
     directLightLight->setAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
     directLightLight->setDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -212,7 +217,7 @@ int main()
         shaderPtr->setMat4f("projection", glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGH, 0.1f, 100.0f));
     });
     // point light
-    auto pointLightObj = scene.createObject<BaseObject>("lightTwo");
+    auto pointLightObj = scene.createObject<BaseEntity>("lightTwo");
     auto pointLightTran = pointLightObj->createComponent<TransformComponent>();
     pointLightTran->setTranslation(glm::vec3(0.0f, 0.0f, -3.0f));
     pointLightTran->setScale(glm::vec3(0.05f, 0.05f, 0.05f));
@@ -226,7 +231,7 @@ int main()
     auto pointLightMesh = pointLightObj->createComponent<MeshComponent>(MeshFactory::GetBoxMesh());
     pointLightMesh->setShader(lightShader);
 
-    auto spotLight = scene.createObject<BaseObject>("lightThree");
+    auto spotLight = scene.createObject<BaseEntity>("lightThree");
     auto spotLightTran = spotLight->createComponent<TransformComponent>();
     spotLightTran->setTranslation(glm::vec3(-3.0f, 0.0f, 0.0f));
     spotLightTran->setScale(glm::vec3(0.05f, 0.05f, 0.05f));

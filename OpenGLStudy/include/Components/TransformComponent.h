@@ -4,6 +4,7 @@
 
 class TransformComponent : public BaseComponent 
 {
+    ACLASS(TransformComponent, BaseComponent);
 public:
     TransformComponent() = default;
     ~TransformComponent() = default;

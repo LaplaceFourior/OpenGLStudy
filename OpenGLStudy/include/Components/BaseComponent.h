@@ -2,11 +2,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Object.h"
 
-class BaseObject;
+class BaseEntity;
 
-class BaseComponent
+class BaseComponent : public Object
 {
+    ACLASS(BaseComponent, Object);
 public:
     BaseComponent() = default;
     virtual ~BaseComponent() = default;
@@ -15,9 +17,9 @@ public:
 public:
     virtual void update(float deltaTime);
 public:
-    void setObject(BaseObject* baseObject);
+    void setObject(BaseEntity* BaseEntity);
 protected:
-    BaseObject* mBaseObject;
+    BaseEntity* mBaseEntity;
 private:
     bool bActive = true;
 };

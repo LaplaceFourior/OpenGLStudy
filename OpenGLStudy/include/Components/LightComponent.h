@@ -4,6 +4,7 @@
 
 class LightComponent : public BaseComponent
 {
+    ACLASS(LightComponent, BaseComponent);
 public:
     LightComponent() = default;
     ~LightComponent() = default;

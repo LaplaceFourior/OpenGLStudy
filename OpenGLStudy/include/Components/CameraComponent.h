@@ -14,6 +14,7 @@ enum Direction {
 
 class CameraComponent : public BaseComponent 
 {
+    ACLASS(CameraComponent, BaseComponent);
 public:
     CameraComponent();
     ~CameraComponent() = default;

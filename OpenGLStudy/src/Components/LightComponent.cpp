@@ -1,5 +1,5 @@
 #include "Components/LightComponent.h"
-#include "Objects/BaseObject.h"
+#include "Entities/BaseEntity.h"
 #include "Components/TransformComponent.h"
 #include "Components/CameraComponent.h"
 
@@ -21,8 +21,8 @@ void PointLightComponent::update(float deltaTime)
 void SpotLightComponent::update(float deltaTime)
 {
     LightComponent::update(deltaTime);
-    auto [transformComp] = mBaseObject->getComponents<TransformComponent>();
-    auto [cameraComp] = mBaseObject->getComponents<CameraComponent>();
+    auto [transformComp] = mBaseEntity->getComponents<TransformComponent>();
+    auto [cameraComp] = mBaseEntity->getComponents<CameraComponent>();
     mPosition = transformComp->getTranslation();
     // direction = cameraComp->getFrontDirection();
 }

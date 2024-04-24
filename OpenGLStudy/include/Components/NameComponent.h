@@ -4,6 +4,7 @@
 
 class NameComponent : public BaseComponent
 {
+    ACLASS(NameComponent, BaseComponent);
 public:
     NameComponent(const std::string& name):
                 mName(name)

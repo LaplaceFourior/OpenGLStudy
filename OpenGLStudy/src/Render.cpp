@@ -36,7 +36,7 @@ void Render::Draw(Scene *scene)
 
 
     // get the active camera
-    std::shared_ptr<BaseObject> activeCamera;
+    std::shared_ptr<BaseEntity> activeCamera;
     for (auto camera : scene->getObjectsWithComponents<CameraComponent>()) {
         auto [cameraComponent] = camera->getComponents<CameraComponent>();
         if (cameraComponent->isActive()) {

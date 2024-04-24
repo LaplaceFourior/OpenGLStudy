@@ -1,12 +1,12 @@
 #include "Components/BaseComponent.h"
-#include "Objects/BaseObject.h"
+#include "Entities/BaseEntity.h"
 
 void BaseComponent::update(float deltaTime)
 {
 
 }
 
-void BaseComponent::setObject(BaseObject* baseObject)
+void BaseComponent::setObject(BaseEntity* BaseEntity)
 {
-    mBaseObject = baseObject;
+    mBaseEntity = BaseEntity;
 }

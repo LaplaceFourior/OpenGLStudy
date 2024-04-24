@@ -7,11 +7,11 @@
 
 class Scene;
 
-class BaseObject
+class BaseEntity
 {
 public:
-    BaseObject(const std::string& name);
-    virtual ~BaseObject() = default;
+    BaseEntity(const std::string& name);
+    virtual ~BaseEntity() = default;
 
 public:
 

@@ -1,6 +1,6 @@
 #include "Components/CameraComponent.h"
 #include "Input.h"
-#include "Objects/BaseObject.h"
+#include "Entities/BaseEntity.h"
 #include "COmponents/TransformComponent.h"
 
 CameraComponent::CameraComponent()
@@ -86,9 +86,9 @@ void CameraComponent::update(float deltaTime)
 
 void CameraComponent::syncCameraPosition()
 {
-    if (mBaseObject) {
-        if (mBaseObject->hasComponent<TransformComponent>()) {
-            mTransforComponent = mBaseObject->getComponent<TransformComponent>();
+    if (mBaseEntity) {
+        if (mBaseEntity->hasComponent<TransformComponent>()) {
+            mTransforComponent = mBaseEntity->getComponent<TransformComponent>();
         }
     }
 }
