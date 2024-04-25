@@ -44,7 +44,8 @@ enum RenderThreadMode {
 int main() 
 {
     registerTypes();
-    REGISTER_CLASS(MySpotLightComponent)
+    REGISTER_CLASS(StableSpotLightComponent)
+    REGISTER_CLASS(CameraSpotLightComponent)
     Window window(WIDTH, HEIGH, "finish a scene by myself");
     window.setActive();
     window.enableDepthTest(true);
@@ -63,13 +64,13 @@ int main()
     // camera settings
     cameraTransformComponent->setTranslation(glm::vec3(0.0f, 0.0f, 3.0f));
     cameraComponent->setLookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-    auto lightComp = cameraObject->createComponent<SpotLightComponent>();
+    auto lightComp = cameraObject->createComponent<CameraSpotLightComponent>();
     lightComp->setAmbient(glm::vec3(0.1f, 0.1f, 0.1f));
     lightComp->setDiffuse(glm::vec3(0.8f, 0.8f, 0.8f));
     lightComp->setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
     lightComp->setCutOff(glm::cos(glm::radians(10.5f)));
     lightComp->setOuterCutOff(glm::cos(glm::radians(12.5f)));
-    lightComp->setActive(false);
+    lightComp->setActive(true);
     
      // create the shader
     auto defaultShader = std::make_shared<Shader>(FileSystem::RelativePath("Assert/Shaders/default.vs"), 
@@ -235,13 +236,14 @@ int main()
     auto spotLightTran = spotLight->createComponent<TransformComponent>();
     spotLightTran->setTranslation(glm::vec3(-3.0f, 0.0f, 0.0f));
     spotLightTran->setScale(glm::vec3(0.05f, 0.05f, 0.05f));
-    auto spotLightLight = spotLight->createComponent<MySpotLightComponent>();
+    auto spotLightLight = spotLight->createComponent<StableSpotLightComponent>();
     spotLightLight->setAmbient(glm::vec3(0.1f, 0.1f, 0.1f));
     spotLightLight->setDiffuse(glm::vec3(0.8f, 0.8f, 0.8f));
     spotLightLight->setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
     spotLightLight->setCutOff(glm::cos(glm::radians(10.5f)));
     spotLightLight->setOuterCutOff(glm::cos(glm::radians(12.5f)));
     spotLightLight->setDirection(glm::vec3(1.0f, 0.0f, 0.0f));    
+    spotLightLight->setActive(true);
     auto spotLightMesh = spotLight->createComponent<MeshComponent>(MeshFactory::GetBoxMesh());
     spotLightMesh->setShader(lightShader);
 
