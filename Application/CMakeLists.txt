@@ -11,9 +11,11 @@ include_directories (${OPENGL_RENDER_INCLUDE})
 
 set(APP_SOURCES
     main.cpp
+    MySpotLightComponent.cpp
 )
 
 set(APP_HEADERS
+    MySpotLightComponent.h
 )
 
 add_executable(OpenGLTest

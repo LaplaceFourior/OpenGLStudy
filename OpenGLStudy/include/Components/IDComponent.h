@@ -4,7 +4,7 @@
 
 class IDComponent : public BaseComponent 
 {
-    ACLASS(IDComponent, BaseComponent);
+    ACLASS(IDComponent, BaseComponent)
 public:
     IDComponent() = default;
     ~IDComponent() = default;

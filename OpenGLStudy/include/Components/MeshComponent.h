@@ -7,7 +7,7 @@
 
 class MeshComponent : public BaseComponent 
 {
-    ACLASS(MeshComponent, BaseComponent);
+    ACLASS(MeshComponent, BaseComponent)
 public:
     MeshComponent(std::shared_ptr<Mesh> mesh)
                 :mMesh(mesh)

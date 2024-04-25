@@ -29,7 +29,7 @@
 #include "Components/TransformComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/LightComponent.h"
-
+#include "MySpotLightComponent.h"
 #include "RegisterTypes.h"
 
 #define WIDTH 800
@@ -44,7 +44,7 @@ enum RenderThreadMode {
 int main() 
 {
     registerTypes();
-
+    REGISTER_CLASS(MySpotLightComponent)
     Window window(WIDTH, HEIGH, "finish a scene by myself");
     window.setActive();
     window.enableDepthTest(true);
@@ -235,7 +235,7 @@ int main()
     auto spotLightTran = spotLight->createComponent<TransformComponent>();
     spotLightTran->setTranslation(glm::vec3(-3.0f, 0.0f, 0.0f));
     spotLightTran->setScale(glm::vec3(0.05f, 0.05f, 0.05f));
-    auto spotLightLight = spotLight->createComponent<SpotLightComponent>();
+    auto spotLightLight = spotLight->createComponent<MySpotLightComponent>();
     spotLightLight->setAmbient(glm::vec3(0.1f, 0.1f, 0.1f));
     spotLightLight->setDiffuse(glm::vec3(0.8f, 0.8f, 0.8f));
     spotLightLight->setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));

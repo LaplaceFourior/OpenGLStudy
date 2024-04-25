@@ -8,9 +8,11 @@
 // global functions
 void registerTypes()
 {
-    REGISTER_CLASS(BaseComponent);
-    REGISTER_CLASS(CameraComponent);
-    REGISTER_CLASS(LightComponent);
-    REGISTER_CLASS(MeshComponent);
-    REGISTER_CLASS(TransformComponent);
+    REGISTER_CLASS(BaseComponent)
+    REGISTER_CLASS(CameraComponent)
+    REGISTER_CLASS(LightComponent)
+    REGISTER_CLASS(DirectLightComponent)
+    REGISTER_CLASS(SpotLightComponent)
+    REGISTER_CLASS(MeshComponent)
+    REGISTER_CLASS(TransformComponent)
 }

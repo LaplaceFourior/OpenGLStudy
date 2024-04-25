@@ -4,7 +4,7 @@
 
 class LightComponent : public BaseComponent
 {
-    ACLASS(LightComponent, BaseComponent);
+    ACLASS(LightComponent, BaseComponent)
 public:
     LightComponent() = default;
     ~LightComponent() = default;
@@ -26,6 +26,7 @@ private:
 
 class DirectLightComponent : public LightComponent
 {
+    ACLASS(DirectLightComponent, LightComponent)
 public:
     DirectLightComponent() = default;
     ~DirectLightComponent() = default;
@@ -39,6 +40,7 @@ private:
 
 class PointLightComponent : public LightComponent
 {
+    ACLASS(PointLightComponent, LightComponent)
 public:
     PointLightComponent() = default;
     ~PointLightComponent() = default;
@@ -64,6 +66,7 @@ private:
 
 class SpotLightComponent : public LightComponent
 {
+    ACLASS(SpotLightComponent, LightComponent)
 public:
     SpotLightComponent() = default;
     ~SpotLightComponent() = default;

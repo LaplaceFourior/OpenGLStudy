@@ -28,6 +28,21 @@ public:
     {
         T::initializeClass();
     }  
+
+    static bool isClass(const std::string& classOne, const std::string& classTwo) 
+    {
+        if (classOne == classTwo) {
+            return true;
+        }
+        ClassInfo* classInfo = &sAllClass[classOne];
+        while (classInfo->mParentClassInfo) {
+            if (classInfo->mParentClassName == classTwo) {
+                return true;
+            }
+            classInfo = classInfo->mParentClassInfo;
+        }
+        return false;
+    }
 };
 
 #define REGISTER_CLASS(mClass)\

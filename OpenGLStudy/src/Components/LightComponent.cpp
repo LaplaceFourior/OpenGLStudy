@@ -21,9 +21,5 @@ void PointLightComponent::update(float deltaTime)
 void SpotLightComponent::update(float deltaTime)
 {
     LightComponent::update(deltaTime);
-    auto [transformComp] = mBaseEntity->getComponents<TransformComponent>();
-    auto [cameraComp] = mBaseEntity->getComponents<CameraComponent>();
-    mPosition = transformComp->getTranslation();
-    // direction = cameraComp->getFrontDirection();
 }
 

@@ -8,7 +8,7 @@ class BaseEntity;
 
 class BaseComponent : public Object
 {
-    ACLASS(BaseComponent, Object);
+    ACLASS(BaseComponent, Object)
 public:
     BaseComponent() = default;
     virtual ~BaseComponent() = default;
@@ -24,3 +24,8 @@ private:
     bool bActive = true;
 };
 
+// #define ACOMPONENT(mClass, mInherit, bUnique)\
+//     ACLASS(mClass, mInherit)\
+// protected:\
+//     bool mUnique = bUnique;\
+// private:
