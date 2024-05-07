@@ -12,5 +12,5 @@ file(GLOB_RECURSE HEADERS include/*.h)
 add_library(OpenGLStudyLib STATIC ${HEADERS} ${GLAD_SOURCES} ${SOURCES})
 target_include_directories(OpenGLStudyLib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(OpenGLStudyLib PRIVATE glfw glm freetype assimp)
+target_link_libraries(OpenGLStudyLib PRIVATE glfw glm freetype assimp imgui)
 

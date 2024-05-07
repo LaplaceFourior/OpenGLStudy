@@ -21,6 +21,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/3rdparty/glm
     ${PROJECT_SOURCE_DIR}/3rdparty/
     ${PROJECT_SOURCE_DIR}/3rdparty/assimp/include
+    ${PROJECT_SOURCE_DIR}/3rdparty/imgui
 )
 
 add_subdirectory(OpenGLStudy)
