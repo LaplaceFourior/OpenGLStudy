@@ -11,6 +11,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glfw)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glm)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/freetype)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/assimp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/imgui_cmakelists)
 
 set(GLAD_SOURCES ${PROJECT_SOURCE_DIR}/3rdparty/glad/src/glad.c)
 
@@ -24,6 +25,5 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/3rdparty/imgui
 )
 
-add_subdirectory(OpenGLStudy)
-add_subdirectory(VulkanStudy)
+add_subdirectory(Tenet)
 add_subdirectory(Application)
