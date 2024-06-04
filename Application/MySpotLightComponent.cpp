@@ -3,6 +3,8 @@
 #include "Components/TransformComponent.h"
 #include "Entities/BaseEntity.h"
 
+using namespace TenetEngine;
+
 void CameraSpotLightComponent::update(float deltaTime)
 {
     SpotLightComponent::update(deltaTime);

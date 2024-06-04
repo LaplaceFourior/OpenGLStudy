@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <string>
 
+namespace TenetEngine {
+
 struct ClassInfo
 {
     std::string mClassName;
@@ -48,3 +50,4 @@ public:
 #define REGISTER_CLASS(mClass)\
     ::ClassDB::registerClass<mClass>();
 
+}

@@ -5,6 +5,8 @@
 
 #include "Window.h"
 
+namespace TenetEngine {
+
 class Input
 {
 public:
@@ -36,3 +38,5 @@ public:
 private:
     static Window* window;
 };
+
+}

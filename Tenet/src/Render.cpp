@@ -4,6 +4,8 @@
 #include "Components/TransformComponent.h"
 #include "Components/CameraComponent.h"
 
+using namespace TenetEngine;
+
 void Render::Draw(Scene *scene)
 {
     const auto& allDirectLights = scene->getObjectsWithComponents<DirectLightComponent>();

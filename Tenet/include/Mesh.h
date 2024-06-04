@@ -7,6 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 // actually, only box mesh now (owo)
 
+namespace TenetEngine {
+
 struct Vertex {
     glm::vec3 position;
     glm::vec2 texCoords;
@@ -32,3 +34,5 @@ private:
     unsigned int EBO;
     unsigned int mIndicesLength;
 };
+
+}

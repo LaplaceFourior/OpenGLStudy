@@ -1,6 +1,8 @@
 #pragma once
 #include "Components/LightComponent.h"
 
+namespace TenetEngine {
+
 class CameraSpotLightComponent : public SpotLightComponent
 {
     ACLASS(CameraSpotLightComponent, SpotLightComponent)
@@ -14,3 +16,5 @@ class StableSpotLightComponent : public SpotLightComponent
 public:
     virtual void update(float deltaTime) override;
 };
+
+}

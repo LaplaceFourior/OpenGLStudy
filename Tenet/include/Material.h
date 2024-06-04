@@ -6,6 +6,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
+namespace TenetEngine {
+
 class Material
 {
 public:
@@ -25,3 +27,4 @@ private:
     float mShininess;
 };
 
+}

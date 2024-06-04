@@ -39,6 +39,8 @@
 #define WIDTH 800
 #define HEIGH 600
 
+using namespace TenetEngine;
+
 enum RenderThreadMode {
 	RENDER_THREAD_UNSAFE,
 	RENDER_THREAD_SAFE,

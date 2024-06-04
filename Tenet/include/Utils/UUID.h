@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+namespace TenetEngine {
+
 class UUID
 {
 public:
@@ -14,3 +16,5 @@ public:
 private:
     uint64_t mID;
 };
+
+}

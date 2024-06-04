@@ -1,5 +1,6 @@
 #include "Register.h"
 
+using namespace TenetEngine;
 
 std::unordered_map<std::string, ClassInfo> ClassDB::sAllClass;
 

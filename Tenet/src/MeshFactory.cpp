@@ -1,6 +1,8 @@
 #include "MeshFactory.h"
 #include "Mesh.h"
 
+using namespace TenetEngine;
+
 // a box centered at the origin 
 std::vector<Vertex> boxVertices = {
     // position             // texture coordinate  // normal 

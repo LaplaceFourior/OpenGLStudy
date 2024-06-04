@@ -7,6 +7,8 @@
 
 #include <queue>
 
+using namespace TenetEngine;
+
 class TextureManager
 {
 public:

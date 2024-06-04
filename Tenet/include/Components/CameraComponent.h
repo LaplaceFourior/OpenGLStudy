@@ -4,6 +4,8 @@
 #include "BaseComponent.h"
 #include "TransformComponent.h"
 
+namespace TenetEngine {
+
 enum Direction {
     FORWARD,
     BACKWARD,
@@ -42,3 +44,4 @@ private:
 
 };
 
+}

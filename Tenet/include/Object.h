@@ -2,6 +2,8 @@
 #include <string>
 #include "Register.h"
 
+namespace TenetEngine {
+
 class Object
 {
 public:
@@ -21,7 +23,7 @@ public:
         if (initialized) {
             return;
         }
-        ::ClassDB::addClass<Object>();
+        TenetEngine::ClassDB::addClass<Object>();
         initialized = true;
     }
 };
@@ -52,7 +54,9 @@ public:\
             return;\
         }\
         mInherits::initializeClass();\
-        ::ClassDB::addClass<mClass>();\
+        TenetEngine::ClassDB::addClass<mClass>();\
         initialized = true;\
     }\
 private:
+
+}

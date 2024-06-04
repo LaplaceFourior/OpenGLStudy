@@ -3,6 +3,8 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include "Components/TransformComponent.h"
 
+using namespace TenetEngine;
+
 void TransformComponent::setTransform(const glm::mat4& transform)
 {
     mTransform = transform;

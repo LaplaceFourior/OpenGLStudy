@@ -10,6 +10,8 @@
 #include "Components/LightComponent.h"
 #include "Material.h"
 
+namespace TenetEngine {
+
 using ShaderFunc = std::function<void(
         std::shared_ptr<Material> material,
         std::vector<std::shared_ptr<DirectLightComponent>> directLights,
@@ -51,3 +53,5 @@ public:
 private:
     ShaderFunc shaderFunc;
 };
+
+}

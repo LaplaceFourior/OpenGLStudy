@@ -4,6 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Object.h"
 
+namespace TenetEngine {
+
 class BaseEntity;
 
 class BaseComponent : public Object
@@ -29,3 +31,4 @@ private:
 // protected:\
 //     bool mUnique = bUnique;\
 // private:
+}

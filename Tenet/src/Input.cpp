@@ -1,5 +1,7 @@
 #include "Input.h"
 
+using namespace TenetEngine;
+
 Window* Input::window = nullptr;
 
 void Input::Init(Window* activeWindow)

@@ -3,6 +3,9 @@
 #include "Entities/BaseEntity.h"
 #include "COmponents/TransformComponent.h"
 
+using namespace TenetEngine;
+
+
 CameraComponent::CameraComponent()
 {
 }

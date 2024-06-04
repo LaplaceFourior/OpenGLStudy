@@ -1,5 +1,7 @@
 #include "Mesh.h"
 
+using namespace TenetEngine;
+
 Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<TriangleIndex>& indices)
 {
     glGenBuffers(1, &VBO);

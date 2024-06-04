@@ -7,6 +7,8 @@
 #include <string>
 #include "Object.h"
 
+namespace TenetEngine {
+
 class Scene;
 
 class BaseEntity : public Object
@@ -33,7 +35,7 @@ public:
     {
         static_assert(std::is_base_of<BaseComponent, T>::value, "T must be a derived class of BaseComponent");
         for (auto it = mAllComponents.begin(); it != mAllComponents.end(); it++) {
-            if (::ClassDB::isClass(it->first, T::getClassStatic())) {
+            if (TenetEngine::ClassDB::isClass(it->first, T::getClassStatic())) {
                 return std::static_pointer_cast<T>(it->second);
             }
         }
@@ -49,7 +51,7 @@ public:
     template<typename T>
     bool hasComponent() const {
         for (auto it = mAllComponents.begin(); it != mAllComponents.end(); it++) {
-            if (::ClassDB::isClass(it->first, T::getClassStatic())) {
+            if (TenetEngine::ClassDB::isClass(it->first, T::getClassStatic())) {
                 return true;
             }
         }
@@ -65,3 +67,5 @@ private:
     Scene* mScene;
 
 };
+
+}

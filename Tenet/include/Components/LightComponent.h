@@ -2,6 +2,8 @@
 
 #include "BaseComponent.h"
 
+namespace TenetEngine {
+
 class LightComponent : public BaseComponent
 {
     ACLASS(LightComponent, BaseComponent)
@@ -91,4 +93,4 @@ protected:
     float mOuterCutOff;
 };
 
-
+}

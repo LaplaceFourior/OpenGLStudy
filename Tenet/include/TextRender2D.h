@@ -10,6 +10,8 @@
 #include <iostream>
 #include <string.h>
 
+namespace TenetEngine {
+
 class TextRender2D
 {
 public:
@@ -17,3 +19,5 @@ public:
     static void LoadFonts(const std::string& filePath);
     static void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
 };
+
+}

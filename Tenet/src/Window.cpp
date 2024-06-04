@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Input.h"
 
+using namespace TenetEngine;
+
 static uint32_t sGLFWWindowCount = 0;
 
 Window::Window(int width, int heigh, const char* title)

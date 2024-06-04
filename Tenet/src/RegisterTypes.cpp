@@ -5,8 +5,11 @@
 #include "Components/LightComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
+
+using namespace TenetEngine;
+
 // global functions
-void registerTypes()
+void TenetEngine::registerTypes()
 {
     REGISTER_CLASS(BaseComponent)
     REGISTER_CLASS(CameraComponent)

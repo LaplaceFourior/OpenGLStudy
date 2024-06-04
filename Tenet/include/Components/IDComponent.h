@@ -2,6 +2,8 @@
 #include "BaseComponent.h"
 #include "Utils/UUID.h"
 
+namespace TenetEngine {
+
 class IDComponent : public BaseComponent 
 {
     ACLASS(IDComponent, BaseComponent)
@@ -15,3 +17,5 @@ public:
 private:
     UUID mUUID;
 };
+
+}

@@ -2,6 +2,8 @@
 
 #include "Components/BaseComponent.h"
 
+namespace TenetEngine {
+
 class TransformComponent : public BaseComponent 
 {
     ACLASS(TransformComponent, BaseComponent)
@@ -26,3 +28,4 @@ private:
     glm::vec3 mScale = glm::vec3(1.0f, 1.0f, 1.0f);
 };
 
+}

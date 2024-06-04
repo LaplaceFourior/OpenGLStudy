@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+namespace TenetEngine {
+
 class Window
 {
 public:
@@ -25,3 +27,5 @@ private:
     GLFWwindow* mWindow = nullptr;
     glm::vec4 mBackgroundColor = glm::vec4(0.2f, 0.5f, 0.6f, 1.0f);
 };
+
+}

@@ -2,6 +2,8 @@
 
 #include <string>
 
+namespace TenetEngine {
+
 class Texture
 {
 public:
@@ -13,3 +15,5 @@ private:
     unsigned int texture;
     unsigned int texturePositionID = -1;
 };
+
+}

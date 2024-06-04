@@ -2,6 +2,8 @@
 #include "Components/BaseComponent.h"
 #include <string>
 
+namespace TenetEngine {
+
 class NameComponent : public BaseComponent
 {
     ACLASS(NameComponent, BaseComponent)
@@ -12,3 +14,5 @@ public:
 private:
     std::string mName;
 };
+
+}

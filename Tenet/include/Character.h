@@ -7,9 +7,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+namespace TenetEngine {
+
 struct Character {
     GLuint TextureID;
     glm::ivec2 Size;
     glm::ivec2 Bearing;
     GLuint Advance;
 };
+
+}

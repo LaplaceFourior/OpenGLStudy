@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "Mesh.h"
 
+namespace TenetEngine {
+
 class MeshComponent : public BaseComponent 
 {
     ACLASS(MeshComponent, BaseComponent)
@@ -27,3 +29,5 @@ private:
     std::shared_ptr<Shader> mShader;
     std::shared_ptr<Mesh> mMesh;
 };
+
+}

@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+using namespace TenetEngine;
+
 float Time::lastFrameTime = 0.0f;
 float Time::deltaTime = 0.0f;
 

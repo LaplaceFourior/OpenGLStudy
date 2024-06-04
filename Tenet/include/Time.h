@@ -1,5 +1,7 @@
 #pragma once
 
+namespace TenetEngine {
+
 class Time
 {
 public:
@@ -11,3 +13,5 @@ private:
     static float lastFrameTime;
     static float deltaTime; 
 };
+
+}

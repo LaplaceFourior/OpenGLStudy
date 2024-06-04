@@ -4,6 +4,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include "Components/NameComponent.h"
 
+using namespace TenetEngine;
+
 BaseEntity::BaseEntity(const std::string &name)
 {
     createComponent<NameComponent>(name);

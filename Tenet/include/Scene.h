@@ -6,6 +6,8 @@
 #include "Utils/UUID.h"
 #include "Components/IDComponent.h"
 
+namespace TenetEngine {
+
 class Scene
 {
 public: 
@@ -47,3 +49,5 @@ public:
 private:
     std::vector<std::shared_ptr<BaseEntity>>  mAllObjects;
 };
+
+}

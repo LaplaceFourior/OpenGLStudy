@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+using namespace TenetEngine;
 
 Shader::Shader(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
