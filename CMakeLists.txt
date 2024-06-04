@@ -23,6 +23,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/3rdparty/
     ${PROJECT_SOURCE_DIR}/3rdparty/assimp/include
     ${PROJECT_SOURCE_DIR}/3rdparty/imgui
+    ${PROJECT_SOURCE_DIR}/3rdparty/imgui/backends
 )
 
 add_subdirectory(Tenet)
